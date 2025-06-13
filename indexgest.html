@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Locação de Material Hospitalar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+        .sidebar-open { transform: translateX(0); }
+        .sidebar-closed { transform: translateX(-100%); }
+        .content { transition: margin-left 0.3s ease-in-out; }
+        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+            color: #4a5568;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: 500;
+        }
+        .filter-btn.active-filter {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Estilos para a notificação Toast */
+        .toast {
+            transform: translateX(110%);
+            transition: transform 0.5s ease-in-out;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 md:flex">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar sidebar-closed md:sidebar-open bg-slate-800 text-white w-64 fixed inset-y-0 left-0 z-30 md:relative md:translate-x-0 shrink-0">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-center">Gesthos</h1>
+            <p class="text-sm text-center text-slate-400">Locação Hospitalar</p>
+        </div>
+        <nav class="mt-8">
+            <a href="#historico" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Histórico
+            </a>
+            <a href="#catalogo" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg> Catálogo
+            </a>
+            <a href="#disponibilidade" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Disponibilidade
+            </a>
+             <a href="#clientes" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.225-1.26-.624-1.742M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-2 9h4"></path></svg> Clientes
+            </a>
+            <a href="#fluxo-caixa" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg> Fluxo de Caixa
+            </a>
+        </nav>
+    </aside>
+
+    <div class="flex flex-col flex-1">
+        <!-- Header -->
+        <header class="bg-white shadow-sm flex justify-between items-center p-4">
+            <button id="menu-button" class="text-gray-500 focus:outline-none md:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg></button>
+            <h2 id="page-title" class="text-xl font-semibold text-gray-800">Histórico</h2>
+            <div><button id="make-rental-header-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Fazer Locação</button></div>
+        </header>
+        
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 p-6 overflow-y-auto">
+            <section id="historico" class="page-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                        <h3 class="text-lg font-semibold">Histórico de Locações</h3>
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                           <div class="flex items-center gap-2">
+                                <label for="history-sort" class="text-sm font-medium text-gray-700">Ordenar por:</label>
+                                <select id="history-sort" class="border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="created_at-desc">Mais Recentes</option>
+                                    <option value="expected_return_date-asc">Devolução Prevista</option>
+                                    <option value="status-asc">Status</option>
+                                    <option value="total_price-desc">Maior Valor</option>
+                                </select>
+                            </div>
+                            <input type="search" id="history-search" placeholder="Buscar..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="py-2 px-4 text-left">Equipamento</th>
+                                    <th class="py-2 px-4 text-left">Cliente</th>
+                                    <th class="py-2 px-4 text-left">Início</th>
+                                    <th class="py-2 px-4 text-left">Dev. Prevista</th>
+                                    <th class="py-2 px-4 text-left">Dev. Real</th>
+                                    <th class="py-2 px-4 text-left">Status</th>
+                                    <th class="py-2 px-4 text-right">Valor Total</th>
+                                    <th class="py-2 px-4 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rental-history-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="catalogo" class="page-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold">Itens do Catálogo</h3>
+                    <button id="add-equipment-catalog-button" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700">Adicionar Equipamento</button>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+                    <div class="flex flex-col md:flex-row justify-between gap-4 mb-4">
+                        <div class="flex flex-wrap items-center gap-2" id="catalog-filters">
+                             <span class="font-semibold text-gray-700">Status:</span>
+                            <button class="filter-btn active-filter" data-status="Todos">Todos</button>
+                            <button class="filter-btn" data-status="Disponível">Disponíveis</button>
+                            <button class="filter-btn" data-status="Alugado">Alugados</button>
+                            <button class="filter-btn" data-status="Em Reparo">Em Manutenção</button>
+                        </div>
+                        <input type="search" id="catalog-search" placeholder="Buscar por nome..." class="w-full md:w-1/3 px-3 py-2 border rounded-lg">
+                    </div>
+                     <div class="border-t pt-4">
+                        <div class="flex flex-wrap items-center gap-4">
+                            <span class="font-semibold text-gray-700">Verificar disponibilidade no período:</span>
+                            <div class="flex items-center gap-2">
+                                <label for="filter-start-date" class="text-sm text-gray-600">De:</label>
+                                <input type="date" id="filter-start-date" class="border rounded-lg px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="filter-end-date" class="text-sm text-gray-600">Até:</label>
+                                <input type="date" id="filter-end-date" class="border rounded-lg px-2 py-1 text-sm">
+                            </div>
+                            <button id="apply-date-filter" class="bg-blue-600 text-white px-4 py-1.5 rounded-lg shadow hover:bg-blue-700 text-sm">Filtrar</button>
+                            <button id="clear-date-filter" class="bg-gray-200 text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-300 text-sm">Limpar</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="equipment-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </section>
+            
+            <section id="disponibilidade" class="page-section hidden">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                        <h3 class="text-lg font-semibold">Controle de Disponibilidade</h3>
+                         <div class="flex items-center gap-4 w-full md:w-auto">
+                            <div class="flex items-center gap-2">
+                                <label for="availability-sort" class="text-sm font-medium text-gray-700">Ordenar por:</label>
+                                <select id="availability-sort" class="border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="name-asc">Nome (A-Z)</option>
+                                    <option value="name-desc">Nome (Z-A)</option>
+                                    <option value="status-asc">Status</option>
+                                </select>
+                            </div>
+                            <input type="search" id="availability-search" placeholder="Buscar por equipamento..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-gray-200"><tr><th class="py-2 px-4 text-left">Equipamento</th><th class="py-2 px-4 text-left">Status</th><th class="py-2 px-4 text-left">Cliente</th><th class="py-2 px-4 text-left">Devolução</th><th class="py-2 px-4 text-center">Ações</th></tr></thead>
+                            <tbody id="availability-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="clientes" class="page-section hidden">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                        <h3 class="text-lg font-semibold">Clientes Cadastrados</h3>
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <div class="flex items-center gap-2">
+                                <label for="customers-sort" class="text-sm font-medium text-gray-700">Ordenar por:</label>
+                                <select id="customers-sort" class="border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="name-asc">Nome (A-Z)</option>
+                                    <option value="name-desc">Nome (Z-A)</option>
+                                    <option value="email-asc">Email</option>
+                                </select>
+                            </div>
+                            <input type="search" id="customers-search" placeholder="Buscar por nome..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
+                            <button id="add-customer-button" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 whitespace-nowrap">Adicionar Cliente</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-gray-200"><tr><th class="py-2 px-4 text-left">Nome</th><th class="py-2 px-4 text-left">Telefone</th><th class="py-2 px-4 text-left">Email</th><th class="py-2 px-4 text-center">Status</th><th class="py-2 px-4 text-center">Ações</th></tr></thead>
+                            <tbody id="customers-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="fluxo-caixa" class="page-section hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-gray-500">Receita Prevista (Mês Atual)</h4>
+                        <p id="forecast-income" class="text-2xl font-bold text-blue-600">R$ 0,00</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-gray-500">Balanço Geral (Realizado)</h4>
+                        <p id="total-balance" class="text-2xl font-bold text-green-600">R$ 0,00</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Histórico de Transações</h3>
+                        <button id="add-expense-button" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700">Adicionar Despesa</button>
+                    </div>
+                     <div class="flex flex-wrap items-center gap-4 border-b pb-4 mb-4">
+                        <span class="font-medium text-gray-700">Filtrar por período:</span>
+                        <div class="flex items-center gap-2">
+                            <label for="filter-cashflow-start" class="text-sm text-gray-600">De:</label>
+                            <input type="date" id="filter-cashflow-start" class="border rounded-lg px-2 py-1 text-sm">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label for="filter-cashflow-end" class="text-sm text-gray-600">Até:</label>
+                            <input type="date" id="filter-cashflow-end" class="border rounded-lg px-2 py-1 text-sm">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="py-2 px-4 text-left">Data</th>
+                                    <th class="py-2 px-4 text-left">Descrição</th>
+                                    <th class="py-2 px-4 text-left">Tipo</th>
+                                    <th class="py-2 px-4 text-right">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cash-flow-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 pt-4 border-t-2 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <h4 class="text-gray-500 font-semibold">Total de Entradas (Período)</h4>
+                            <p id="total-income" class="text-xl font-bold text-green-600">R$ 0,00</p>
+                        </div>
+                        <div>
+                            <h4 class="text-gray-500 font-semibold">Total de Saídas (Período)</h4>
+                            <p id="total-expenses" class="text-xl font-bold text-red-600">R$ 0,00</p>
+                        </div>
+                        <div>
+                            <h4 class="text-gray-500 font-semibold">Saldo (Período)</h4>
+                            <p id="net-balance" class="text-xl font-bold text-blue-600">R$ 0,00</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAIS -->
+    <div id="add-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Equipamento</h2><form id="add-equipment-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salvar</button></div></form></div></div>
+    <div id="edit-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Equipamento</h2><form id="edit-equipment-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" id="edit-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea id="edit-description" name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea id="edit-additional-info" name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" id="edit-image_url" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" id="edit-rental_price" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Status</label><select id="edit-status" name="status" class="w-full px-3 py-2 border rounded-lg" required><option value="Disponível">Disponível</option><option value="Alugado">Alugado</option><option value="Em Reparo">Em Reparo</option></select></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" id="edit-acquisition_date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
+    <div id="add-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Cliente</h2><form id="add-customer-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" id="customer-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Telefone</label><input type="tel" id="customer-phone" name="phone" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Email</label><input type="email" id="customer-email" name="email" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Endereço</label><textarea id="customer-address" name="address" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Salvar</button></div></form></div></div>
+    <div id="edit-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Cliente</h2><form id="edit-customer-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Telefone</label><input type="tel" name="phone" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Email</label><input type="email" name="email" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Endereço</label><textarea name="address" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
+    <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Nova Locação</h2><form id="new-rental-form" class="space-y-4"><input type="hidden" name="equipment_id"><input type="hidden" name="rental_price"><div class="mb-4"><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
+    <div id="edit-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Locação</h2><form id="edit-rental-form" class="space-y-4"><input type="hidden" name="rental_id"><div><label class="block text-gray-700">Equipamento</label><p id="edit-rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="edit-rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
+    <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
+    <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
+
+    <!-- Container para as notificações Toast -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-3 overflow-hidden"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://nddpeihaumvzymntzetn.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZHBlaWhhdW12enltbnR6ZXRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MDI5NDQsImV4cCI6MjA2NTE3ODk0NH0.zphPgiL5017bI-iwoA1oE-COeHe1FM9p7s0U4gawxrI'; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // --- UI Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('.page-section');
+            const pageTitle = document.getElementById('page-title');
+            const sidebar = document.getElementById('sidebar');
+            const menuButton = document.getElementById('menu-button');
+            
+            const modals = document.querySelectorAll('.modal');
+            document.getElementById('add-equipment-catalog-button').addEventListener('click', () => openModal('add-equipment-modal'));
+            document.getElementById('make-rental-header-button').addEventListener('click', () => document.querySelector('a[href="#disponibilidade"]').click());
+            document.getElementById('add-customer-button').addEventListener('click', () => openModal('add-customer-modal'));
+            document.getElementById('add-expense-button').addEventListener('click', () => openModal('add-expense-modal'));
+            document.querySelectorAll('.cancel-modal-button').forEach(b => b.addEventListener('click', () => modals.forEach(m => closeModal(m.id))));
+
+            // --- Event Listeners ---
+            // Search
+            document.getElementById('history-search').addEventListener('input', (e) => fetchRentalHistory(e.target.value));
+            document.getElementById('catalog-search').addEventListener('input', triggerCatalogFetch);
+            document.getElementById('availability-search').addEventListener('input', (e) => fetchAvailability(e.target.value));
+            document.getElementById('customers-search').addEventListener('input', (e) => fetchCustomers(e.target.value));
+            
+            // Sorting
+            document.getElementById('history-sort').addEventListener('change', () => fetchRentalHistory());
+            document.getElementById('availability-sort').addEventListener('change', () => fetchAvailability());
+            document.getElementById('customers-sort').addEventListener('change', () => fetchCustomers());
+
+            // Filters
+            document.getElementById('apply-date-filter').addEventListener('click', triggerCatalogFetch);
+            document.getElementById('clear-date-filter').addEventListener('click', () => {
+                document.getElementById('filter-start-date').value = '';
+                document.getElementById('filter-end-date').value = '';
+                triggerCatalogFetch();
+            });
+            document.getElementById('filter-cashflow-start').addEventListener('change', fetchCashFlow);
+            document.getElementById('filter-cashflow-end').addEventListener('change', fetchCashFlow);
+
+            // Forms
+            document.getElementById('add-equipment-form').addEventListener('submit', handleNewEquipmentSubmit);
+            document.getElementById('edit-equipment-form').addEventListener('submit', handleEditEquipmentSubmit);
+            document.getElementById('add-customer-form').addEventListener('submit', handleNewClientSubmit);
+            document.getElementById('edit-customer-form').addEventListener('submit', handleEditCustomerSubmit);
+            document.getElementById('new-rental-form').addEventListener('submit', handleNewRentalSubmit);
+            document.getElementById('edit-rental-form').addEventListener('submit', handleEditRentalSubmit);
+            document.getElementById('add-expense-form').addEventListener('submit', handleNewExpenseSubmit);
+            document.getElementById('return-form').addEventListener('submit', handleReturnSubmit);
+
+            // Catalog Status Filters
+            document.querySelectorAll('#catalog-filters .filter-btn').forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    document.querySelectorAll('#catalog-filters .filter-btn').forEach(b => b.classList.remove('active-filter'));
+                    event.currentTarget.classList.add('active-filter');
+                    triggerCatalogFetch();
+                });
+            });
+            
+            // --- Initial Load ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    pageSections.forEach(s => s.id === targetId ? s.classList.remove('hidden') : s.classList.add('hidden'));
+                    pageTitle.textContent = link.textContent.trim();
+                    
+                    if (targetId === 'historico') fetchRentalHistory();
+                    if (targetId === 'disponibilidade') fetchAvailability();
+                    if (targetId === 'clientes') fetchCustomers();
+                    if (targetId === 'fluxo-caixa') fetchCashFlow();
+                    if (targetId === 'catalogo') fetchEquipments();
+                    
+                    if (window.innerWidth < 768) sidebar.classList.add('sidebar-closed');
+                });
+            });
+
+            menuButton.addEventListener('click', () => sidebar.classList.toggle('sidebar-closed'));
+            fetchRentalHistory();
+        });
+
+        function triggerCatalogFetch() {
+            const activeFilter = document.querySelector('#catalog-filters .active-filter').dataset.status;
+            const searchTerm = document.getElementById('catalog-search').value;
+            fetchEquipments(activeFilter === 'Todos' ? null : activeFilter, searchTerm);
+        }
+
+        // --- Util Functions ---
+        const openModal = (modalId) => document.getElementById(modalId).classList.remove('hidden');
+        const closeModal = (modalId) => document.getElementById(modalId).classList.add('hidden');
+        const formatCurrency = (value) => (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const formatDate = (dateString) => {
+            if (!dateString) return '---';
+            const date = new Date(dateString);
+            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+            return new Date(date.getTime() + userTimezoneOffset).toLocaleDateString('pt-BR');
+        }
+        
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const typeClasses = { success: 'bg-green-500 text-white', error: 'bg-red-500 text-white', info: 'bg-blue-500 text-white' };
+            const iconSvg = {
+                success: `<svg class="w-6 h-6 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>`,
+                error: `<svg class="w-6 h-6 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>`,
+                info: `<svg class="w-6 h-6 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>`
+            };
+            toast.className = `toast flex items-center w-full max-w-xs p-4 rounded-lg shadow-lg ${typeClasses[type] || typeClasses.info}`;
+            toast.innerHTML = `${iconSvg[type] || iconSvg.info} <div class="text-sm font-semibold">${message}</div>`;
+            toastContainer.prepend(toast);
+            requestAnimationFrame(() => { toast.classList.add('show'); });
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }, 4000);
+        }
+
+        // --- Core Logic ---
+        async function handleNewExpenseSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = {
+                description: formData.get('description'),
+                amount: parseFloat(formData.get('amount')),
+                transaction_date: formData.get('transaction_date'),
+                type: 'Saída'
+            };
+
+            if (!data.description || !data.amount || !data.transaction_date) {
+                return showToast('Por favor, preencha todos os campos.', 'error');
+            }
+
+            const { error } = await supabaseClient.from('cash_flow').insert(data);
+            if (error) {
+                return showToast('Falha ao adicionar despesa: ' + error.message, 'error');
+            }
+            
+            showToast('Despesa adicionada com sucesso!', 'success');
+            e.target.reset();
+            closeModal('add-expense-modal');
+            fetchCashFlow();
+        }
+
+        async function handleNewEquipmentSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const { error } = await supabaseClient.from('equipment').insert({ ...data, status: 'Disponível' });
+            if (error) return showToast('Falha: ' + error.message, 'error');
+            showToast('Equipamento adicionado!', 'success');
+            e.target.reset();
+            closeModal('add-equipment-modal');
+            fetchEquipments();
+        }
+
+        async function handleEditEquipmentSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const id = data.id;
+            delete data.id;
+            const { error } = await supabaseClient.from('equipment').update(data).eq('id', id);
+            if (error) return showToast('Falha: ' + error.message, 'error');
+            showToast('Equipamento atualizado!', 'success');
+            e.target.reset();
+            closeModal('edit-equipment-modal');
+            fetchEquipments();
+            fetchAvailability();
+        }
+
+        async function handleNewClientSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const { error } = await supabaseClient.from('customers').insert(data);
+            if (error) return showToast('Falha: ' + error.message, 'error');
+            showToast('Cliente adicionado!', 'success');
+            e.target.reset();
+            closeModal('add-customer-modal');
+            fetchCustomers();
+        }
+
+        async function handleEditCustomerSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const id = data.id;
+            delete data.id;
+
+            const { error } = await supabaseClient.from('customers').update(data).eq('id', id);
+            if (error) return showToast('Falha ao atualizar cliente: ' + error.message, 'error');
+            
+            showToast('Cliente atualizado com sucesso!', 'success');
+            e.target.reset();
+            closeModal('edit-customer-modal');
+            fetchCustomers();
+        }
+
+        async function handleNewRentalSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const startDate = new Date();
+            const returnDate = new Date(data.expected_return_date.replace(/-/g, '\/'));
+            const days = Math.max(1, Math.ceil((returnDate - startDate) / (1000 * 60 * 60 * 24)));
+            try {
+                await supabaseClient.rpc('create_rental_and_update_equipment', { p_equipment_id: data.equipment_id, p_customer_id: data.customer_id, p_rental_start_date: startDate.toISOString(), p_expected_return_date: returnDate.toISOString(), p_total_price: days * parseFloat(data.rental_price) });
+                showToast('Locação registrada!', 'success');
+                e.target.reset();
+                closeModal('new-rental-modal');
+                fetchAvailability();
+                fetchRentalHistory();
+            } catch (error) { 
+                showToast('Falha: ' + error.message, 'error');
+            }
+        }
+
+        async function handleEditRentalSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const rentalId = formData.get('rental_id');
+            const customerId = formData.get('customer_id');
+            const expectedReturnDate = formData.get('expected_return_date');
+
+            const { error } = await supabaseClient
+                .from('rentals')
+                .update({ 
+                    customer_id: customerId, 
+                    expected_return_date: expectedReturnDate 
+                })
+                .eq('id', rentalId);
+
+            if (error) {
+                return showToast('Falha ao atualizar locação: ' + error.message, 'error');
+            }
+            
+            showToast('Locação atualizada com sucesso!', 'success');
+            e.target.reset();
+            closeModal('edit-rental-modal');
+            fetchRentalHistory();
+            fetchAvailability();
+            fetchCustomers();
+        }
+        
+        async function handleReturnSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            try {
+                const { error } = await supabaseClient.rpc('process_equipment_return', { 
+                    p_rental_id: parseInt(data.rental_id), 
+                    p_equipment_id: parseInt(data.equipment_id),
+                    p_actual_return_date: data.actual_return_date,
+                    p_additional_info: data.additional_info
+                });
+                if(error) throw error;
+                showToast('Devolução registrada com sucesso!', 'success');
+                e.target.reset();
+                closeModal('return-modal');
+                fetchAvailability();
+                fetchRentalHistory();
+                fetchCashFlow();
+            } catch (error) {
+                showToast('Falha ao registrar devolução: ' + error.message, 'error');
+            }
+        }
+        
+        async function fetchCustomers(searchTerm = '') {
+            const sortValue = document.getElementById('customers-sort').value.split('-');
+            const sortColumn = sortValue[0];
+            const sortAscending = sortValue[1] === 'asc';
+
+            let query = supabaseClient
+                .from('customers')
+                .select('*, rentals(status)')
+                .order(sortColumn, { ascending: sortAscending });
+
+            if(searchTerm) query = query.ilike('name', `%${searchTerm}%`);
+            const { data, error } = await query;
+            if (error) return showToast('Erro ao buscar clientes.', 'error');
+            const tableBody = document.getElementById('customers-table-body');
+            tableBody.innerHTML = data.map(customer => {
+                const hasActiveRental = customer.rentals.some(rental => rental.status === 'Ativa');
+                const statusHtml = hasActiveRental 
+                    ? `<span class="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">Com equipamento</span>`
+                    : `<span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Livre</span>`;
+
+                return `
+                    <tr class="border-b">
+                        <td class="py-2 px-4">${customer.name}</td>
+                        <td class="py-2 px-4">${customer.phone || '---'}</td>
+                        <td class="py-2 px-4">${customer.email || '---'}</td>
+                        <td class="py-2 px-4 text-center">${statusHtml}</td>
+                        <td class="py-2 px-4 text-center">
+                            <button data-id="${customer.id}" class="edit-customer-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
+                        </td>
+                    </tr>`;
+            }).join('');
+            document.querySelectorAll('.edit-customer-button').forEach(b => b.addEventListener('click', handleEditCustomerClick));
+        }
+
+        async function fetchRentalHistory(searchTerm = '') {
+            const sortValue = document.getElementById('history-sort').value.split('-');
+            const sortColumn = sortValue[0];
+            const sortAscending = sortValue[1] === 'asc';
+            
+            let query = supabaseClient
+                .from('rentals')
+                .select('*, equipment(name), customers(id, name)')
+                .order(sortColumn, { ascending: sortAscending });
+            
+            const { data, error } = await query;
+            if (error) return showToast('Erro ao buscar histórico.', 'error');
+
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            const filteredData = searchTerm 
+                ? data.filter(r => (r.equipment?.name?.toLowerCase() || '').includes(lowerCaseSearchTerm) || (r.customers?.name?.toLowerCase() || '').includes(lowerCaseSearchTerm)) 
+                : data;
+            
+            const tableBody = document.getElementById('rental-history-table-body');
+            tableBody.innerHTML = filteredData.map(r => {
+                const statusColor = r.status === 'Ativa' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800';
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const expectedReturnDate = new Date(r.expected_return_date);
+                const isOverdue = r.status === 'Ativa' && expectedReturnDate < today;
+                const overdueClass = isOverdue ? 'bg-red-100 text-red-800 font-semibold' : '';
+                const actionsCell = r.status === 'Ativa' 
+                    ? `<td class="py-2 px-4 text-center">
+                         <button data-rental-id="${r.id}" 
+                                 data-customer-id="${r.customers?.id || ''}" 
+                                 data-equipment-name="${r.equipment?.name || 'N/A'}"
+                                 data-return-date="${r.expected_return_date}"
+                                 class="edit-rental-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
+                       </td>`
+                    : '<td class="py-2 px-4 text-center">---</td>';
+
+                return `<tr class="border-b">
+                            <td class="py-2 px-4">${r.equipment?.name || 'N/A'}</td>
+                            <td class="py-2 px-4">${r.customers?.name || 'N/A'}</td>
+                            <td class="py-2 px-4">${formatDate(r.rental_start_date)}</td>
+                            <td class="py-2 px-4 ${overdueClass}">${formatDate(r.expected_return_date)}</td>
+                            <td class="py-2 px-4">${formatDate(r.actual_return_date)}</td>
+                            <td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${r.status}</span></td>
+                            <td class="py-2 px-4 text-right">${formatCurrency(r.total_price)}</td>
+                            ${actionsCell}
+                        </tr>`;
+            }).join('');
+            document.querySelectorAll('.edit-rental-button').forEach(b => b.addEventListener('click', handleEditRentalClick));
+        }
+        
+        async function fetchEquipments(statusFilter = null, searchTerm = '') {
+            const startDate = document.getElementById('filter-start-date').value;
+            const endDate = document.getElementById('filter-end-date').value;
+            const isDateFilterActive = startDate && endDate;
+
+            let query = supabaseClient.from('equipment').select('*, rentals(*, customers(name))');
+
+            // --- FILTRAGEM ---
+            if (isDateFilterActive) {
+                if (new Date(startDate) > new Date(endDate)) {
+                    return showToast('A data de início não pode ser maior que a data de fim.', 'error');
+                }
+                const { data: unavailableRentals, error: rentalError } = await supabaseClient
+                    .from('rentals')
+                    .select('equipment_id')
+                    .eq('status', 'Ativa')
+                    .lte('rental_start_date', endDate) 
+                    .gte('expected_return_date', startDate);
+                
+                if (rentalError) return showToast('Erro ao filtrar por data.', 'error');
+
+                if (unavailableRentals.length > 0) {
+                    const unavailableIds = unavailableRentals.map(r => r.equipment_id);
+                    query = query.not('id', 'in', `(${[...new Set(unavailableIds)].join(',')})`);
+                }
+                query = query.not('status', 'eq', 'Em Reparo');
+
+            } else {
+                if (statusFilter && statusFilter !== 'Todos') {
+                     query = query.eq('status', statusFilter);
+                }
+            }
+            
+            if (searchTerm) {
+                query = query.ilike('name', `%${searchTerm}%`);
+            }
+            
+            query = query.order('name');
+            const { data, error } = await query;
+            if (error) return showToast('Erro ao buscar equipamentos.', 'error');
+
+            // --- RENDERIZAÇÃO ---
+            const listElement = document.getElementById('equipment-list');
+            if (data.length === 0) {
+                listElement.innerHTML = `<p class="text-gray-500 col-span-full">Nenhum equipamento encontrado para os filtros aplicados.</p>`;
+                return;
+            }
+            
+            listElement.innerHTML = data.map(eq => {
+                let statusText, statusColor, rentalInfoHtml = '';
+
+                if (isDateFilterActive) {
+                    statusText = 'Disponível';
+                    statusColor = 'bg-green-100 text-green-800';
+                } else {
+                    statusText = eq.status;
+                    statusColor = eq.status === 'Disponível' ? 'bg-green-100 text-green-800' : (eq.status === 'Alugado' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800');
+                    if (eq.status === 'Alugado') {
+                        const activeRental = eq.rentals.find(r => r.status === 'Ativa');
+                        if (activeRental) {
+                            rentalInfoHtml = `<p class="text-sm text-gray-600 mt-1">Devolução em: ${formatDate(activeRental.expected_return_date)}</p>`;
+                        }
+                    }
+                }
+
+                return `<div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-2">
+                            <img src="${eq.image_url || 'https://placehold.co/600x400/e2e8f0/cbd5e0?text=Sem+Imagem'}" alt="${eq.name}" class="w-full h-48 object-cover">
+                            <div class="p-4 flex-grow">
+                                <h3 class="text-lg font-semibold">${eq.name}</h3>
+                                ${rentalInfoHtml}
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-xl font-bold text-blue-600">${formatCurrency(eq.rental_price)}/dia</span>
+                                    <span class="text-sm font-medium px-2 py-1 rounded-full ${statusColor}">${statusText}</span>
+                                </div>
+                            </div>
+                            <div class="p-2 bg-gray-50 border-t text-right">
+                                <button data-id="${eq.id}" class="edit-button bg-yellow-400 text-yellow-900 hover:bg-yellow-500 font-semibold py-1 px-3 rounded-md text-xs">Editar</button>
+                            </div>
+                        </div>`;
+            }).join('');
+            document.querySelectorAll('.edit-button').forEach(b => b.addEventListener('click', handleEditClick));
+        }
+        
+        async function fetchAvailability(searchTerm = '') {
+            const sortValue = document.getElementById('availability-sort').value.split('-');
+            const sortColumn = sortValue[0];
+            const sortAscending = sortValue[1] === 'asc';
+
+            let query = supabaseClient
+                .from('equipment')
+                .select('*, rentals (*, customers (name))')
+                .order(sortColumn, { ascending: sortAscending });
+
+            if(searchTerm) query = query.ilike('name', `%${searchTerm}%`);
+            const { data, error } = await query;
+            if (error) return showToast('Erro ao verificar disponibilidade.', 'error');
+            const tableBody = document.getElementById('availability-table-body');
+            tableBody.innerHTML = '';
+            data.forEach(eq => {
+                const activeRental = eq.rentals.find(r => r.status === 'Ativa');
+                const statusColor = eq.status === 'Disponível' ? 'bg-green-100 text-green-800' : (eq.status === 'Alugado' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800');
+                const row = document.createElement('tr');
+                row.className = 'border-b hover:bg-gray-50';
+                
+                let actionsCell = `<button data-id="${eq.id}" class="edit-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>`;
+                if (eq.status === 'Disponível') {
+                    actionsCell += `<button data-id="${eq.id}" data-name="${eq.name}" data-price="${eq.rental_price}" class="rent-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2">Alugar</button>`;
+                } else if (activeRental) {
+                    actionsCell += `<button data-rental-id="${activeRental.id}" data-equipment-id="${eq.id}" class="return-button bg-green-500 text-white px-3 py-1 rounded text-sm ml-2">Devolver</button>`;
+                }
+
+                row.innerHTML = `<td class="py-2 px-4">${eq.name}</td><td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${eq.status}</span></td><td class="py-2 px-4">${activeRental?.customers?.name || '---'}</td><td class="py-2 px-4">${formatDate(activeRental?.expected_return_date)}</td><td class="py-2 px-4 text-center">${actionsCell}</td>`;
+                tableBody.appendChild(row);
+            });
+            
+            document.querySelectorAll('.rent-button').forEach(b => b.addEventListener('click', handleRentClick));
+            document.querySelectorAll('.return-button').forEach(b => b.addEventListener('click', handleReturnClick));
+            document.querySelectorAll('.edit-button').forEach(b => b.addEventListener('click', handleEditClick));
+        }
+        
+        async function fetchCashFlow() {
+            const startDate = document.getElementById('filter-cashflow-start').value;
+            const endDate = document.getElementById('filter-cashflow-end').value;
+
+            let query = supabaseClient.from('cash_flow').select('*').order('transaction_date', { ascending: false });
+
+            if(startDate && endDate) {
+                if (new Date(startDate) > new Date(endDate)) {
+                    return showToast('A data de início não pode ser maior que a data de fim.', 'error');
+                }
+                query = query.gte('transaction_date', startDate).lte('transaction_date', endDate);
+            }
+
+            const { data: transactions, error: transError } = await query;
+            if(transError) return showToast('Erro ao buscar fluxo de caixa.', 'error');
+            
+            let periodIncome = 0;
+            let periodExpenses = 0;
+
+            if(transactions) {
+                document.getElementById('cash-flow-table-body').innerHTML = transactions.map(t => {
+                    const isIncome = t.type === 'Entrada';
+                    if(isIncome) {
+                        periodIncome += t.amount;
+                    } else {
+                        periodExpenses += t.amount;
+                    }
+                    return `<tr class="border-b"><td class="py-2 px-4">${formatDate(t.transaction_date)}</td><td class="py-2 px-4">${t.description}</td><td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td><td class="py-2 px-4 text-right font-medium ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatCurrency(t.amount)}</td></tr>`;
+                }).join('');
+            }
+            
+            document.getElementById('total-income').textContent = formatCurrency(periodIncome);
+            document.getElementById('total-expenses').textContent = formatCurrency(periodExpenses);
+            document.getElementById('net-balance').textContent = formatCurrency(periodIncome - periodExpenses);
+
+
+            // Fetch overall balance (This remains unchanged, showing the total balance of all time)
+            const { data: allTransactions } = await supabaseClient.from('cash_flow').select('amount, type');
+            if(allTransactions) {
+                const totalBalance = allTransactions.reduce((acc, t) => acc + (t.type === 'Entrada' ? t.amount : -t.amount), 0);
+                document.getElementById('total-balance').textContent = formatCurrency(totalBalance);
+            }
+
+            // Fetch forecast income (This remains unchanged, showing the forecast for the current month)
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString();
+            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString();
+            const { data: forecast, error: forecastError } = await supabaseClient.from('rentals').select('total_price').eq('status', 'Ativa').gte('expected_return_date', firstDay).lte('expected_return_date', lastDay);
+            if(forecastError) return showToast('Erro ao buscar previsão de receita.', 'error');
+
+            if(forecast) {
+                const forecastSum = forecast.reduce((sum, r) => sum + r.total_price, 0);
+                document.getElementById('forecast-income').textContent = formatCurrency(forecastSum);
+            }
+        }
+
+        async function handleEditClick(e) {
+            const { data, error } = await supabaseClient.from('equipment').select('*').eq('id', e.target.dataset.id).single();
+            if(error) return showToast("Erro ao carregar dados para edição.", 'error');
+            const form = document.getElementById('edit-equipment-form');
+            Object.keys(data).forEach(key => { if(form[key]) form[key].value = data[key] || '' });
+            openModal('edit-equipment-modal');
+        }
+
+        async function handleEditCustomerClick(e) {
+            const id = e.target.dataset.id;
+            const { data, error } = await supabaseClient.from('customers').select('*').eq('id', id).single();
+            if(error) return showToast("Erro ao carregar dados do cliente.", 'error');
+
+            const form = document.getElementById('edit-customer-form');
+            form.id.value = data.id;
+            form.name.value = data.name;
+            form.phone.value = data.phone || '';
+            form.email.value = data.email || '';
+            form.address.value = data.address || '';
+            
+            openModal('edit-customer-modal');
+        }
+
+        async function handleEditRentalClick(e) {
+            const { rentalId, customerId, equipmentName, returnDate } = e.target.dataset;
+
+            const form = document.getElementById('edit-rental-form');
+            form.rental_id.value = rentalId;
+            document.getElementById('edit-rental-equipment-name').textContent = equipmentName;
+            
+            // Corrige a formatação da data para o input
+            const date = new Date(returnDate);
+            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+            const correctedDate = new Date(date.getTime() + userTimezoneOffset);
+            form.expected_return_date.value = correctedDate.toISOString().split('T')[0];
+
+            const { data: customers, error } = await supabaseClient.from('customers').select('id, name').order('name');
+            if(error) return showToast("Erro ao buscar clientes.", 'error');
+
+            const customerSelect = document.getElementById('edit-rental-customer');
+            customerSelect.innerHTML = customers.map(c => `<option value="${c.id}" ${c.id == customerId ? 'selected' : ''}>${c.name}</option>`).join('') || '<option>Cadastre um cliente</option>';
+            
+            openModal('edit-rental-modal');
+        }
+
+        async function handleRentClick(e) {
+            const { id, name, price } = e.target.dataset;
+            const form = document.getElementById('new-rental-form');
+            form.equipment_id.value = id;
+            form.rental_price.value = price;
+            document.getElementById('rental-equipment-name').textContent = name;
+            
+            const { data: customers, error } = await supabaseClient.from('customers').select('id, name').order('name');
+            if(error) return showToast("Erro ao buscar clientes.", 'error');
+            document.getElementById('rental-customer').innerHTML = customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('') || '<option>Cadastre um cliente</option>';
+            openModal('new-rental-modal');
+        }
+
+        async function handleReturnClick(e) {
+            const { rentalId, equipmentId } = e.target.dataset;
+            const { data: equipment, error } = await supabaseClient.from('equipment').select('name, additional_info').eq('id', equipmentId).single();
+
+            if (error) return showToast("Erro ao buscar dados do equipamento.", "error");
+
+            const form = document.getElementById('return-form');
+            form.rental_id.value = rentalId;
+            form.equipment_id.value = equipmentId;
+            document.getElementById('return-equipment-name').textContent = equipment.name;
+            form.elements.additional_info.value = equipment.additional_info || '';
+            form.actual_return_date.valueAsDate = new Date();
+
+            openModal('return-modal');
+        }
+    </script>
+</body>
+</html>

@@ -49,20 +49,20 @@
             <p class="text-sm text-center text-slate-400">Locação Hospitalar</p>
         </div>
         <nav class="mt-8">
-            <a href="#historico" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Histórico
-            </a>
             <a href="#catalogo" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg> Catálogo
             </a>
             <a href="#disponibilidade" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Disponibilidade
             </a>
-             <a href="#clientes" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.225-1.26-.624-1.742M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-2 9h4"></path></svg> Clientes
-            </a>
             <a href="#contratos" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg> Contratos
+            </a>
+             <a href="#historico" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Histórico
+            </a>
+             <a href="#clientes" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.225-1.26-.624-1.742M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-2 9h4"></path></svg> Clientes
             </a>
             <a href="#fluxo-caixa" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg> Fluxo de Caixa
@@ -74,36 +74,26 @@
         <!-- Header -->
         <header class="bg-white shadow-sm flex justify-between items-center p-4">
             <button id="menu-button" class="text-gray-500 focus:outline-none md:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg></button>
-            <h2 id="page-title" class="text-xl font-semibold text-gray-800">Histórico</h2>
+            <h2 id="page-title" class="text-xl font-semibold text-gray-800">Catálogo</h2>
             <div><button id="make-rental-header-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Fazer Locação</button></div>
         </header>
         
         <!-- Main Content -->
         <main id="main-content" class="flex-1 p-6 overflow-y-auto">
-            <section id="historico" class="page-section">
+            <section id="historico" class="page-section hidden">
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-                        <h3 class="text-lg font-semibold">Histórico de Locações</h3>
+                        <h3 class="text-lg font-semibold">Histórico de Locações (Concluídas)</h3>
                          <div class="flex items-center gap-4 w-full md:w-auto">
                            <div class="flex items-center gap-2">
                                 <label for="history-sort" class="text-sm font-medium text-gray-700">Ordenar por:</label>
                                 <select id="history-sort" class="border-gray-300 rounded-md shadow-sm text-sm">
                                     <option value="created_at-desc">Mais Recentes</option>
                                     <option value="expected_return_date-asc">Devolução Prevista</option>
-                                    <option value="status-asc">Status</option>
                                     <option value="total_price-desc">Maior Valor</option>
                                 </select>
                             </div>
                             <input type="search" id="history-search" placeholder="Buscar..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-4 border-t pt-4">
-                        <div class="flex items-center gap-2" id="history-status-filters">
-                            <span class="font-medium text-gray-700">Status:</span>
-                            <button class="filter-btn active-filter" data-status="Todos">Todos</button>
-                            <button class="filter-btn" data-status="Ativa">Ativas</button>
-                            <button class="filter-btn" data-status="Agendado">Agendadas</button>
-                            <button class="filter-btn" data-status="Concluída">Concluídas</button>
                         </div>
                     </div>
                     <div class="overflow-x-auto mt-4">
@@ -115,9 +105,7 @@
                                     <th class="py-2 px-4 text-left">Início</th>
                                     <th class="py-2 px-4 text-left">Dev. Prevista</th>
                                     <th class="py-2 px-4 text-left">Dev. Real</th>
-                                    <th class="py-2 px-4 text-left">Status</th>
                                     <th class="py-2 px-4 text-right">Valor Total</th>
-                                    <th class="py-2 px-4 text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="rental-history-table-body"></tbody>
@@ -126,7 +114,7 @@
                 </div>
             </section>
             
-            <section id="catalogo" class="page-section hidden">
+            <section id="catalogo" class="page-section">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <h3 class="text-lg font-semibold">Itens do Catálogo</h3>
                     <div class="flex items-center gap-4">
@@ -281,7 +269,7 @@
                         <p id="forecast-income" class="text-2xl font-bold text-blue-600">R$ 0,00</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h4 class="text-gray-500">Renda Prevista (Futura)</h4>
+                        <h4 class="text-gray-500">Renda Prevista (Contratos Agendados)</h4>
                         <p id="future-income" class="text-2xl font-bold text-cyan-600">R$ 0,00</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md">
@@ -318,6 +306,7 @@
                                     <th class="py-2 px-4 text-left">Descrição</th>
                                     <th class="py-2 px-4 text-left">Tipo</th>
                                     <th class="py-2 px-4 text-right">Valor</th>
+                                    <th class="py-2 px-4 text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="cash-flow-table-body"></tbody>
@@ -343,14 +332,15 @@
     </div>
 
     <!-- MODAIS -->
-     <div id="extend-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Estender Contrato</h2><form id="extend-rental-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><input type="hidden" name="original_return_date"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="extend-equipment-name" class="text-lg font-semibold"></p></div><div><label for="new-return-date" class="block text-gray-700">Nova Data de Devolução</label><input type="date" id="new-return-date" name="new_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto (R$)</label><input type="number" id="extend-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total Atualizado: <span id="extend-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar Extensão</button></div></form></div></div>
+    <div id="confirmation-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-4" id="confirmation-title">Confirmar Ação</h2><p id="confirmation-message" class="mb-6">Tem a certeza que deseja prosseguir?</p><div class="flex justify-end space-x-4"><button type="button" id="cancel-confirmation-button" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="button" id="confirm-action-button" class="px-4 py-2 bg-red-600 text-white rounded-lg">Confirmar</button></div></div></div>
+     <div id="extend-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Estender Contrato</h2><form id="extend-rental-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><input type="hidden" name="original_return_date"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="extend-equipment-name" class="text-lg font-semibold"></p></div><div><label for="new-return-date" class="block text-gray-700">Nova Data de Devolução</label><input type="date" id="new-return-date" name="new_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto Adicional (R$)</label><input type="number" id="extend-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total Atualizado: <span id="extend-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar Extensão</button></div></form></div></div>
     <div id="equipment-details-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col"><div class="flex justify-between items-start mb-4"><h2 class="text-2xl font-bold equipment-name"></h2><button type="button" class="cancel-modal-button text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button></div><div class="flex-grow overflow-y-auto"><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><img src="https://placehold.co/600x400" alt="Equipment Image" class="equipment-image w-full h-64 object-cover rounded-lg mb-4"><div><h3 class="font-semibold text-lg border-b pb-2 mb-2">Preço</h3><p class="text-2xl font-bold text-blue-600 equipment-price"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2 mt-4">Data de Aquisição</h3><p class="text-gray-700 equipment-acquisition-date"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2 mt-4">Descrição</h3><p class="text-gray-700 equipment-description mb-4"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2">Informações Adicionais</h3><p class="text-gray-700 equipment-additional-info"></p></div></div><div class="mt-6"><h3 class="font-semibold text-lg border-b pb-2 mb-2">Histórico de Locações</h3><div class="overflow-x-auto max-h-48"><table class="min-w-full bg-white"><thead class="bg-gray-200 sticky top-0"><tr><th class="py-2 px-4 text-left">Cliente</th><th class="py-2 px-4 text-left">Início</th><th class="py-2 px-4 text-left">Fim</th><th class="py-2 px-4 text-left">Status</th></tr></thead><tbody id="equipment-rental-history-table"></tbody></table></div></div></div><div class="flex justify-end space-x-4 pt-6 mt-auto border-t"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Fechar</button><button type="button" class="edit-button-modal bg-yellow-400 text-yellow-900 hover:bg-yellow-500 font-semibold py-2 px-4 rounded-lg">Editar Equipamento</button></div></div></div>
     <div id="add-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Equipamento</h2><form id="add-equipment-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salvar</button></div></form></div></div>
     <div id="edit-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Equipamento</h2><form id="edit-equipment-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" id="edit-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea id="edit-description" name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea id="edit-additional-info" name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" id="edit-image_url" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" id="edit-rental_price" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Status</label><select id="edit-status" name="status" class="w-full px-3 py-2 border rounded-lg" required><option value="Disponível">Disponível</option><option value="Alugado">Alugado</option><option value="Em Reparo">Em Reparo</option></select></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" id="edit-acquisition_date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="add-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Cliente</h2><form id="add-customer-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" id="customer-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Telefone</label><input type="tel" id="customer-phone" name="phone" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Email</label><input type="email" id="customer-email" name="email" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Endereço</label><textarea id="customer-address" name="address" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Salvar</button></div></form></div></div>
     <div id="edit-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Cliente</h2><form id="edit-customer-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Telefone</label><input type="tel" name="phone" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Email</label><input type="email" name="email" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Endereço</label><textarea name="address" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Nova Locação</h2><form id="new-rental-form" class="space-y-4"><input type="hidden" name="equipment_id"><input type="hidden" name="rental_price"><div><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Início da Locação</label><input type="date" id="rental-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto (R$)</label><input type="number" id="rental-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total: <span id="rental-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
-    <div id="edit-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Locação</h2><form id="edit-rental-form" class="space-y-4"><input type="hidden" name="rental_id"><div><label class="block text-gray-700">Equipamento</label><p id="edit-rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="edit-rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
+    <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Contrato</h2><form id="edit-contract-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="edit-contract-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="edit-contract-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
     <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
 
@@ -379,6 +369,8 @@
             document.getElementById('add-customer-button').addEventListener('click', () => openModal('add-customer-modal'));
             document.getElementById('add-expense-button').addEventListener('click', () => openModal('add-expense-modal'));
             document.querySelectorAll('.cancel-modal-button').forEach(b => b.addEventListener('click', () => modals.forEach(m => closeModal(m.id))));
+            document.getElementById('cancel-confirmation-button').addEventListener('click', () => closeModal('confirmation-modal'));
+
 
             // --- Event Listeners ---
             // Search
@@ -443,7 +435,7 @@
             document.getElementById('add-customer-form').addEventListener('submit', handleNewClientSubmit);
             document.getElementById('edit-customer-form').addEventListener('submit', handleEditCustomerSubmit);
             document.getElementById('new-rental-form').addEventListener('submit', handleNewRentalSubmit);
-            document.getElementById('edit-rental-form').addEventListener('submit', handleEditRentalSubmit);
+            document.getElementById('edit-contract-form').addEventListener('submit', handleEditContractSubmit);
             document.getElementById('add-expense-form').addEventListener('submit', handleNewExpenseSubmit);
             document.getElementById('extend-rental-form').addEventListener('submit', handleExtendRentalSubmit);
             document.getElementById('return-form').addEventListener('submit', handleReturnSubmit);
@@ -477,7 +469,7 @@
             });
 
             menuButton.addEventListener('click', () => sidebar.classList.toggle('sidebar-closed'));
-            fetchRentalHistory();
+            fetchEquipments(); // Start on catalog view
         });
 
         function switchCatalogView(view) {
@@ -737,31 +729,42 @@
             fetchCashFlow();
         }
 
-        async function handleEditRentalSubmit(e) {
+        async function handleEditContractSubmit(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
             const rentalId = formData.get('rental_id');
             const customerId = formData.get('customer_id');
             const expectedReturnDate = formData.get('expected_return_date');
+            
+            const { data: rentalData, error: fetchError } = await supabaseClient.from('rentals').select('rental_start_date,equipment(rental_price)').eq('id', rentalId).single();
+            if(fetchError) return showToast("Erro ao carregar dados do contrato", "error");
+
+            const startDate = new Date(rentalData.rental_start_date);
+            const newReturnDate = new Date(expectedReturnDate);
+            const dailyPrice = rentalData.equipment.rental_price;
+            const days = Math.ceil((newReturnDate - startDate) / (1000 * 60 * 60 * 24));
+            const newTotalPrice = days * dailyPrice;
 
             const { error } = await supabaseClient
                 .from('rentals')
                 .update({ 
                     customer_id: customerId, 
-                    expected_return_date: expectedReturnDate 
+                    expected_return_date: expectedReturnDate,
+                    total_price: newTotalPrice
                 })
                 .eq('id', rentalId);
 
             if (error) {
-                return showToast('Falha ao atualizar locação: ' + error.message, 'error');
+                return showToast('Falha ao atualizar o contrato: ' + error.message, 'error');
             }
             
-            showToast('Locação atualizada com sucesso!', 'success');
+            showToast('Contrato atualizado com sucesso!', 'success');
             e.target.reset();
-            closeModal('edit-rental-modal');
+            closeModal('edit-contract-modal');
             fetchRentalHistory();
             fetchAvailability();
             fetchCustomers();
+            fetchContracts();
         }
         
         async function handleExtendRentalSubmit(e) {
@@ -826,6 +829,7 @@
                 fetchAvailability();
                 fetchRentalHistory();
                 fetchCashFlow();
+                fetchContracts();
             } catch (error) {
                 showToast('Falha ao registrar devolução: ' + error.message, 'error');
             }
@@ -883,17 +887,13 @@
             const sortValue = document.getElementById('history-sort').value.split('-');
             const sortColumn = sortValue[0];
             const sortAscending = sortValue[1] === 'asc';
-            const statusFilter = document.querySelector('#history-status-filters .active-filter').dataset.status;
             
             let query = supabaseClient
                 .from('rentals')
                 .select('*, equipment(name), customers(id, name)')
+                .eq('status', 'Concluída')
                 .order(sortColumn, { ascending: sortAscending });
             
-            if (statusFilter !== 'Todos') {
-                query = query.eq('status', statusFilter);
-            }
-
             const { data, error } = await query;
             if (error) return showToast('Erro ao buscar histórico.', 'error');
 
@@ -904,40 +904,15 @@
             
             const tableBody = document.getElementById('rental-history-table-body');
             tableBody.innerHTML = filteredData.map(r => {
-                const statusColors = {
-                    'Ativa': 'bg-yellow-100 text-yellow-800',
-                    'Concluída': 'bg-green-100 text-green-800',
-                    'Agendado': 'bg-blue-100 text-blue-800'
-                };
-                const statusColor = statusColors[r.status] || 'bg-gray-100 text-gray-800';
-                
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const expectedReturnDate = new Date(r.expected_return_date);
-                const isOverdue = r.status === 'Ativa' && expectedReturnDate < today;
-                const overdueClass = isOverdue ? 'bg-red-100 text-red-800 font-semibold' : '';
-                const actionsCell = r.status === 'Ativa' 
-                    ? `<td class="py-2 px-4 text-center">
-                         <button data-rental-id="${r.id}" 
-                                 data-customer-id="${r.customers?.id || ''}" 
-                                 data-equipment-name="${r.equipment?.name || 'N/A'}"
-                                 data-return-date="${r.expected_return_date}"
-                                 class="edit-rental-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
-                       </td>`
-                    : '<td class="py-2 px-4 text-center">---</td>';
-
                 return `<tr class="border-b">
                             <td class="py-2 px-4">${r.equipment?.name || 'N/A'}</td>
                             <td class="py-2 px-4">${r.customers?.name || 'N/A'}</td>
                             <td class="py-2 px-4">${formatDate(r.rental_start_date)}</td>
-                            <td class="py-2 px-4 ${overdueClass}">${formatDate(r.expected_return_date)}</td>
+                            <td class="py-2 px-4">${formatDate(r.expected_return_date)}</td>
                             <td class="py-2 px-4">${formatDate(r.actual_return_date)}</td>
-                            <td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${r.status}</span></td>
                             <td class="py-2 px-4 text-right">${formatCurrency(r.total_price)}</td>
-                            ${actionsCell}
                         </tr>`;
             }).join('');
-            document.querySelectorAll('.edit-rental-button').forEach(b => b.addEventListener('click', handleEditRentalClick));
         }
         
         function renderCatalog() {
@@ -1110,7 +1085,7 @@
 
             const tableBody = document.getElementById('contracts-table-body');
             if (data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-500">Nenhum contrato ativo ou agendado no momento.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500">Nenhum contrato ativo ou agendado no momento.</td></tr>`;
                 return;
             }
             
@@ -1130,7 +1105,14 @@
                     <td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${contract.status}</span></td>
                     <td class="py-2 px-4 text-right">${formatCurrency(contract.total_price)}</td>
                     <td class="py-2 px-4 text-center">
-                        <button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm"
+                         <button data-rental-id="${contract.id}" 
+                                 data-customer-id="${contract.customers?.id || ''}"
+                                 data-start-date="${contract.rental_start_date}"
+                                 data-daily-price="${contract.equipment.rental_price}"
+                                 data-equipment-name="${contract.equipment?.name || 'N/A'}"
+                                 data-return-date="${contract.expected_return_date}"
+                                 class="edit-contract-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
+                        <button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2"
                                 data-rental-id="${contract.id}"
                                 data-equipment-id="${contract.equipment.id}"
                                 data-equipment-name="${contract.equipment.name}"
@@ -1140,7 +1122,7 @@
                     </td>
                 </tr>
             `}).join('');
-
+            document.querySelectorAll('.edit-contract-button').forEach(btn => btn.addEventListener('click', handleEditContractClick));
             document.querySelectorAll('.extend-button').forEach(btn => btn.addEventListener('click', handleExtendClick));
         }
         
@@ -1175,13 +1157,17 @@
                     } else {
                         periodExpenses += t.amount;
                     }
-                    return `<tr class="border-b"><td class="py-2 px-4">${formatDate(t.transaction_date)}</td><td class="py-2 px-4">${t.description}</td><td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td><td class="py-2 px-4 text-right font-medium ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatCurrency(t.amount)}</td></tr>`;
+                    const deleteButton = t.type === 'Saída' ? `<button data-id="${t.id}" class="delete-expense-button text-red-500 hover:text-red-700 p-1">Excluir</button>` : '';
+
+                    return `<tr class="border-b"><td class="py-2 px-4">${formatDate(t.transaction_date)}</td><td class="py-2 px-4">${t.description}</td><td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td><td class="py-2 px-4 text-right font-medium ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatCurrency(t.amount)}</td><td class="py-2 px-4 text-center">${deleteButton}</td></tr>`;
                 }).join('');
             }
             
             document.getElementById('total-income').textContent = formatCurrency(periodIncome);
             document.getElementById('total-expenses').textContent = formatCurrency(periodExpenses);
             document.getElementById('net-balance').textContent = formatCurrency(periodIncome - periodExpenses);
+            
+            document.querySelectorAll('.delete-expense-button').forEach(b => b.addEventListener('click', handleDeleteExpenseClick));
 
 
             // Fetch overall balance
@@ -1210,6 +1196,40 @@
                 document.getElementById('future-income').textContent = formatCurrency(futureSum);
             }
         }
+
+        function handleDeleteExpenseClick(e) {
+            const expenseId = e.currentTarget.dataset.id;
+            const confirmBtn = document.getElementById('confirm-action-button');
+            const cancelBtn = document.getElementById('cancel-confirmation-button');
+            const modal = document.getElementById('confirmation-modal');
+            
+            modal.querySelector('#confirmation-title').textContent = 'Excluir Despesa';
+            modal.querySelector('#confirmation-message').textContent = 'Tem a certeza que deseja excluir esta despesa? Esta ação não pode ser desfeita.';
+            
+            openModal('confirmation-modal');
+
+            const confirmHandler = async () => {
+                const { error } = await supabaseClient.from('cash_flow').delete().eq('id', expenseId);
+                
+                closeModal('confirmation-modal');
+                if (error) {
+                    showToast('Falha ao excluir despesa: ' + error.message, 'error');
+                } else {
+                    showToast('Despesa excluída com sucesso!', 'success');
+                    fetchCashFlow();
+                }
+                confirmBtn.removeEventListener('click', confirmHandler);
+            };
+            
+            const cancelHandler = () => {
+                closeModal('confirmation-modal');
+                confirmBtn.removeEventListener('click', confirmHandler);
+            };
+
+            confirmBtn.addEventListener('click', confirmHandler, { once: true });
+            cancelBtn.addEventListener('click', cancelHandler, { once: true });
+        }
+
 
         async function openEditModal(equipmentId) {
              const { data, error } = await supabaseClient.from('equipment').select('*').eq('id', equipmentId).single();
@@ -1267,25 +1287,30 @@
             openModal('edit-customer-modal');
         }
 
-        async function handleEditRentalClick(e) {
-            const { rentalId, customerId, equipmentName, returnDate } = e.currentTarget.dataset;
+        async function handleEditContractClick(e) {
+            const { rentalId, customerId, equipmentName, returnDate, dailyPrice, startDate } = e.currentTarget.dataset;
 
-            const form = document.getElementById('edit-rental-form');
+            const form = document.getElementById('edit-contract-form');
             form.rental_id.value = rentalId;
-            document.getElementById('edit-rental-equipment-name').textContent = equipmentName;
+            form.daily_price.value = dailyPrice;
+            form.start_date.value = startDate;
+
+            document.getElementById('edit-contract-equipment-name').textContent = equipmentName;
             
             const date = new Date(returnDate);
             const userTimezoneOffset = date.getTimezoneOffset() * 60000;
             const correctedDate = new Date(date.getTime() + userTimezoneOffset);
             form.expected_return_date.value = correctedDate.toISOString().split('T')[0];
+            form.expected_return_date.min = form.expected_return_date.value;
+
 
             const { data: customers, error } = await supabaseClient.from('customers').select('id, name').order('name');
             if(error) return showToast("Erro ao buscar clientes.", 'error');
 
-            const customerSelect = document.getElementById('edit-rental-customer');
+            const customerSelect = document.getElementById('edit-contract-customer');
             customerSelect.innerHTML = customers.map(c => `<option value="${c.id}" ${c.id == customerId ? 'selected' : ''}>${c.name}</option>`).join('') || '<option>Cadastre um cliente</option>';
             
-            openModal('edit-rental-modal');
+            openModal('edit-contract-modal');
         }
 
         async function handleExtendClick(e) {
@@ -1318,9 +1343,6 @@
                 form.rental_price.value = price;
                 document.getElementById('rental-equipment-name').textContent = name;
             } else {
-                 // Handle case where user clicks "Fazer Locação" from header
-                 // Maybe open a different modal to first select an equipment?
-                 // For now, let's just show an info toast.
                  showToast('Por favor, selecione um equipamento na aba Disponibilidade primeiro.', 'info');
                  document.querySelector('a[href="#disponibilidade"]').click();
                  return;

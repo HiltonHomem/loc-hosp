@@ -348,8 +348,8 @@
     <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-3 overflow-hidden"></div>
 
     <script>
-        const SUPABASE_URL = 'https://nddpeihaumvzymntzetn.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZHBlaWhhdW12enltbnR6ZXRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MDI5NDQsImV4cCI6MjA2NTE3ODk0NH0.zphPgiL5017bI-iwoA1oE-COeHe1FM9p7s0U4gawxrI'; 
+        const SUPABASE_URL = 'https://dqzpmwzcpvibjjastcik.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxenBtd3pjcHZpYmpqYXN0Y2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwODk5NDQsImV4cCI6MjA2NTY2NTk0NH0.sQBEbatxPszUV1KRbV5f7hCO5FJTOesjBllglbjeOYM';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let lastFetchedEquipments = [];
@@ -608,6 +608,8 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
+            // 🔒 Remove o campo ID caso esteja vindo por acidente
+            delete data.id;
             const { error } = await supabaseClient.from('equipment').insert({ ...data, status: 'Disponível' });
             if (error) return showToast('Falha: ' + error.message, 'error');
             showToast('Equipamento adicionado!', 'success');
@@ -620,7 +622,7 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
-            const id = data.id;
+            //const id = data.id;
             delete data.id;
             const { error } = await supabaseClient.from('equipment').update(data).eq('id', id);
             if (error) return showToast('Falha: ' + error.message, 'error');

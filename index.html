@@ -1078,7 +1078,7 @@
         async function fetchContracts() {
             const { data, error } = await supabaseClient
                 .from('rentals')
-                .select('*, equipment(id, name, rental_price), customers(id, name)')
+                .select('*, equipment(id, name, rental_price), customers(*)')
                 .or('status.eq.Ativa,status.eq.Agendado')
                 .order('expected_return_date', { ascending: true });
 

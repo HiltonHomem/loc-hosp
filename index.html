@@ -6,6 +6,7 @@
     <title>Sistema de Locação de Material Hospitalar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -608,8 +609,6 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
-            // 🔒 Remove o campo ID caso esteja vindo por acidente
-            delete data.id;
             const { error } = await supabaseClient.from('equipment').insert({ ...data, status: 'Disponível' });
             if (error) return showToast('Falha: ' + error.message, 'error');
             showToast('Equipamento adicionado!', 'success');
@@ -622,7 +621,7 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
-            //const id = data.id;
+            const id = data.id;
             delete data.id;
             const { error } = await supabaseClient.from('equipment').update(data).eq('id', id);
             if (error) return showToast('Falha: ' + error.message, 'error');
@@ -1121,11 +1120,73 @@
                                 data-start-date="${contract.rental_start_date}"
                                 data-daily-price="${contract.equipment.rental_price}"
                                 data-original-return-date="${contract.expected_return_date}">Estender</button>
+                        <button class="generate-pdf-button bg-gray-500 text-white px-3 py-1 rounded text-sm ml-2" data-contract='${JSON.stringify(contract)}'>PDF</button>
+                         <a href="formulario.html?id=${contract.id}" target="_blank">
+                           <button class="bg-green-600 text-white px-3 py-1 rounded text-sm ml-2">Formulário</button>
+                         </a>
                     </td>
                 </tr>
             `}).join('');
             document.querySelectorAll('.edit-contract-button').forEach(btn => btn.addEventListener('click', handleEditContractClick));
             document.querySelectorAll('.extend-button').forEach(btn => btn.addEventListener('click', handleExtendClick));
+            document.querySelectorAll('.generate-pdf-button').forEach(btn => btn.addEventListener('click', handleGeneratePDFClick));
+        }
+
+        function handleGeneratePDFClick(e) {
+            const contractData = JSON.parse(e.currentTarget.dataset.contract);
+            generateContractPDF(contractData);
+        }
+
+        function generateContractPDF(contract) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "bold");
+            doc.text("Contrato de Locação de Equipamento", 105, 20, { align: "center" });
+
+            doc.setFontSize(12);
+            doc.text("LOCADOR(A):", 20, 40);
+            doc.setFont("helvetica", "normal");
+            doc.text("Gesthos - Locação Hospitalar", 20, 47);
+
+            doc.setFont("helvetica", "bold");
+            doc.text("LOCATÁRIO(A):", 105, 40);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Nome: ${contract.customers.name}`, 105, 47);
+            doc.text(`Telefone: ${contract.customers.phone || 'N/A'}`, 105, 54);
+            doc.text(`Email: ${contract.customers.email || 'N/A'}`, 105, 61);
+
+            doc.setLineWidth(0.5);
+            doc.line(20, 75, 190, 75);
+
+            doc.setFont("helvetica", "bold");
+            doc.text("1. OBJETO DO CONTRATO", 20, 85);
+            doc.setFont("helvetica", "normal");
+            doc.text(`O presente contrato tem como objeto a locação do seguinte equipamento:`, 20, 92);
+            doc.setFont("helvetica", "bold");
+            doc.text(`- Equipamento: ${contract.equipment.name}`, 25, 100);
+            
+            doc.setFont("helvetica", "bold");
+            doc.text("2. PRAZO E VALOR", 20, 115);
+            doc.setFont("helvetica", "normal");
+            doc.text(`- Período da Locação: De ${formatDate(contract.rental_start_date)} até ${formatDate(contract.expected_return_date)}.`, 20, 122);
+            doc.text(`- Valor Total do Contrato: ${formatCurrency(contract.total_price)}.`, 20, 129);
+
+            doc.setFont("helvetica", "bold");
+            doc.text("3. CLÁUSULAS GERAIS", 20, 144);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const clauses = `O LOCATÁRIO obriga-se a zelar pela conservação do equipamento alugado, utilizando-o de acordo com as suas especificações. Qualquer dano causado por mau uso será de responsabilidade do LOCATÁRIO. O equipamento deve ser devolvido nas mesmas condições em que foi recebido, salvo o desgaste natural pelo uso regular.`;
+            const splitClauses = doc.splitTextToSize(clauses, 170);
+            doc.text(splitClauses, 20, 151);
+
+            doc.line(30, 220, 90, 220);
+            doc.text("Assinatura do Locador", 45, 225);
+            doc.line(120, 220, 180, 220);
+            doc.text("Assinatura do Locatário", 130, 225);
+
+            doc.save(`Contrato_${contract.id}_${contract.customers.name.replace(/\s/g, '_')}.pdf`);
         }
         
         async function fetchCashFlow() {

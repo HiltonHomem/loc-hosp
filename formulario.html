@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulário de Contrato</title>
+  <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 2rem; }
+    label { display: block; margin-top: 1rem; }
+    input, textarea { width: 100%; padding: 0.5rem; }
+    button { margin-top: 1.5rem; padding: 0.5rem 1rem; }
+  </style>
+</head>
+<body>
+
+  <h2>Formulário Complementar</h2>
+  <form id="formulario-contrato">
+    <div id="dadosCliente"></div>
+
+    <label>Médico Responsável: <input name="medico_responsavel" required /></label>
+    <label>Tipo de Cirurgia: <input name="tipo_cirurgia" required /></label>
+    <label>Data da Cirurgia: <input type="date" name="data_cirurgia" required /></label>
+    <label>Indicação (quem recomendou): <input name="indicacao" required /></label>
+
+    <button type="submit">Salvar e Gerar PDF</button>
+  </form>
+
+  <div id="pdf-content" style="display:none;"></div>
+
+  <script>
+    const SUPABASE_URL = 'https://SEU_PROJECTO.supabase.co';
+    const SUPABASE_ANON_KEY = 'SUA_ANON_KEY';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get('id');
+
+    let dadosContrato = null;
+
+    async function carregarContrato() {
+      const { data, error } = await supabase
+        .from('rentals')
+        .select('*, customer:customers(*), equipment:equipment(*)')
+        .eq('uuid_formulario', uuid)
+        .single();
+
+      if (error || !data) {
+        alert('Contrato não encontrado.');
+        return;
+      }
+
+      dadosContrato = data;
+      const cliente = data.customer;
+      document.getElementById('dadosCliente').innerHTML = `
+        <p><strong>Cliente:</strong> ${cliente.name}</p>
+        <p><strong>CPF:</strong> ${cliente.cpf || '...'}</p>
+        <p><strong>Endereço:</strong> ${cliente.endereco || '...'}</p>
+      `;
+    }
+
+    document.getElementById('formulario-contrato').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const campos = Object.fromEntries(formData.entries());
+
+      const { error } = await supabase
+        .from('rentals')
+        .update(campos)
+        .eq('uuid_formulario', uuid);
+
+      if (error) return alert('Erro ao salvar.');
+
+      gerarPDF({ ...dadosContrato, ...campos });
+    });
+
+    function gerarPDF(data) {
+      const html = `
+        <h1>Contrato de Locação</h1>
+        <p><strong>Cliente:</strong> ${data.customer.name}</p>
+        <p><strong>CPF:</strong> ${data.customer.cpf || '-'}</p>
+        <p><strong>Endereço:</strong> ${data.customer.endereco || '-'}</p>
+        <hr>
+        <p><strong>Equipamento:</strong> ${data.equipment.name}</p>
+        <p><strong>Valor:</strong> R$ ${data.total_price}</p>
+        <p><strong>Início:</strong> ${new Date(data.rental_start_date).toLocaleDateString()}</p>
+        <p><strong>Devolução Prevista:</strong> ${new Date(data.expected_return_date).toLocaleDateString()}</p>
+        <hr>
+        <p><strong>Médico:</strong> ${data.medico_responsavel}</p>
+        <p><strong>Tipo de cirurgia:</strong> ${data.tipo_cirurgia}</p>
+        <p><strong>Data da cirurgia:</strong> ${new Date(data.data_cirurgia).toLocaleDateString()}</p>
+        <p><strong>Indicação:</strong> ${data.indicacao}</p>
+      `;
+
+      document.getElementById('pdf-content').innerHTML = html;
+
+      html2pdf().set({
+        margin: 1,
+        filename: 'contrato_completo.pdf',
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+      }).from(document.getElementById('pdf-content')).save();
+    }
+
+    carregarContrato();
+  </script>
+</body>
+</html>

@@ -1,160 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Formulário de Contrato</title>
-  <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pré-Cadastro de Cliente</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 2rem; }
-    h2 { text-align: center; }
-    #dadosContrato p { margin: 0.5rem 0; }
-    label { display: block; margin-top: 1rem; }
-    input, textarea { width: 100%; padding: 0.5rem; box-sizing: border-box; }
-    button { margin-top: 1.5rem; padding: 0.5rem 1rem; cursor: pointer; }
-  </style>
-</head>
-<body>
-
-  <h2>Formulário Complementar</h2>
-  <div id="dadosContrato" style="background-color: #f3f4f6; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;"></div>
-  
-  <form id="formulario-contrato">
-    <label>Médico Responsável: <input name="medico_responsavel" required /></label>
-    <label>Tipo de Cirurgia: <input name="tipo_cirurgia" required /></label>
-    <label>Data da Cirurgia: <input type="date" name="data_cirurgia" required /></label>
-    <label>Indicação (quem recomendou): <input name="indicacao" required /></label>
-
-    <button type="submit">Salvar e Gerar PDF</button>
-  </form>
-
-  <div id="pdf-content" style="display:none;"></div>
-
   <script>
+    // --- CONFIGURAÇÃO SUPABASE ---
     const SUPABASE_URL = 'https://dqzpmwzcpvibjjastcik.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxenBtd3pjcHZpYmpqYXN0Y2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwODk5NDQsImV4cCI6MjA2NTY2NTk0NH0.sQBEbatxPszUV1KRbV5f7hCO5FJTOesjBllglbjeOYM';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const rentalId = urlParams.get('id');
-
-    let dadosContrato = null;
-
-    async function carregarContrato() {
-      if (!rentalId) {
-        alert('ID do contrato não encontrado na URL.');
-        return;
-      }
-      const { data, error } = await supabaseClient
-        .from('rentals')
-        .select('*, customers(*), equipment(*)')
-        .eq('id', rentalId)
-        .single();
-
-      if (error || !data) {
-        console.error('Erro ao buscar contrato:', error);
-        alert('Contrato não encontrado ou erro ao carregar.');
-        return;
-      }
-
-      dadosContrato = data;
-      const cliente = data.customers;
-      const equipamento = data.equipment;
-      
-      document.getElementById('dadosContrato').innerHTML = `
-        <p><strong>Contrato ID:</strong> ${dadosContrato.id}</p>
-        <p><strong>Cliente:</strong> ${cliente.name}</p>
-        <p><strong>Equipamento:</strong> ${equipamento.name}</p>
-      `;
-
-      // Preenche os campos se já existirem dados
-      if (data.medico_responsavel) document.querySelector('[name="medico_responsavel"]').value = data.medico_responsavel;
-      if (data.tipo_cirurgia) document.querySelector('[name="tipo_cirurgia"]').value = data.tipo_cirurgia;
-      if (data.data_cirurgia) document.querySelector('[name="data_cirurgia"]').value = data.data_cirurgia;
-      if (data.indicacao) document.querySelector('[name="indicacao"]').value = data.indicacao;
-    }
-
-    document.getElementById('formulario-contrato').addEventListener('submit', async function (e) {
+    async function enviarCadastro(e) {
       e.preventDefault();
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customer_id');
+
+      if (!customerId) {
+        document.body.innerHTML = '<h1>Erro: Link de cadastro inválido ou expirado.</h1>';
+        return;
+      }
+
       const formData = new FormData(e.target);
       const campos = Object.fromEntries(formData.entries());
+      campos.situacao_cadastral = 'pendente';
 
       const { error } = await supabaseClient
-        .from('rentals')
+        .from('customers')
         .update(campos)
-        .eq('id', rentalId);
+        .eq('id', customerId);
 
       if (error) {
-        console.error('Erro ao salvar:', error);
-        return alert('Erro ao salvar as informações.');
+        console.error('Erro ao cadastrar cliente:', error);
+        return alert('Erro ao salvar as informações. Por favor, tente novamente.');
       }
-      
-      alert('Informações salvas com sucesso! A gerar PDF...');
 
-      gerarPDF({ ...dadosContrato, ...campos });
-    });
-
-    function gerarPDF(data) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-
-      doc.setFontSize(18);
-      doc.setFont("helvetica", "bold");
-      doc.text("Contrato de Locação de Equipamento", 105, 20, { align: "center" });
-
-      doc.setFontSize(12);
-      doc.text("LOCADOR(A):", 20, 40);
-      doc.setFont("helvetica", "normal");
-      doc.text("Gesthos - Locação Hospitalar", 20, 47);
-
-      doc.setFont("helvetica", "bold");
-      doc.text("LOCATÁRIO(A):", 105, 40);
-      doc.setFont("helvetica", "normal");
-      doc.text(`Nome: ${data.customers.name}`, 105, 47);
-      doc.text(`Telefone: ${data.customers.phone || 'N/A'}`, 105, 54);
-      doc.text(`Email: ${data.customers.email || 'N/A'}`, 105, 61);
-
-      doc.setLineWidth(0.5);
-      doc.line(20, 75, 190, 75);
-
-      doc.setFont("helvetica", "bold");
-      doc.text("1. OBJETO DO CONTRATO", 20, 85);
-      doc.setFont("helvetica", "normal");
-      doc.text(`O presente contrato tem como objeto a locação do seguinte equipamento:`, 20, 92);
-      doc.setFont("helvetica", "bold");
-      doc.text(`- Equipamento: ${data.equipment.name}`, 25, 100);
-      
-      doc.setFont("helvetica", "bold");
-      doc.text("2. PRAZO E VALOR", 20, 115);
-      doc.setFont("helvetica", "normal");
-      doc.text(`- Período da Locação: De ${new Date(data.rental_start_date).toLocaleDateString()} até ${new Date(data.expected_return_date).toLocaleDateString()}.`, 20, 122);
-      doc.text(`- Valor Total do Contrato: ${data.total_price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.`, 20, 129);
-
-      doc.setFont("helvetica", "bold");
-      doc.text("3. INFORMAÇÕES COMPLEMENTARES", 20, 144);
-      doc.setFont("helvetica", "normal");
-      doc.text(`- Médico Responsável: ${data.medico_responsavel}`, 25, 151);
-      doc.text(`- Tipo de Cirurgia: ${data.tipo_cirurgia}`, 25, 158);
-      doc.text(`- Data da Cirurgia: ${new Date(data.data_cirurgia).toLocaleDateString()}`, 25, 165);
-      doc.text(`- Indicação: ${data.indicacao}`, 25, 172);
-
-      doc.setFont("helvetica", "bold");
-      doc.text("4. CLÁUSULAS GERAIS", 20, 187);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      const clauses = `O LOCATÁRIO obriga-se a zelar pela conservação do equipamento alugado, utilizando-o de acordo com as suas especificações. Qualquer dano causado por mau uso será de responsabilidade do LOCATÁRIO. O equipamento deve ser devolvido nas mesmas condições em que foi recebido, salvo o desgaste natural pelo uso regular.`;
-      const splitClauses = doc.splitTextToSize(clauses, 170);
-      doc.text(splitClauses, 20, 194);
-
-      doc.line(30, 240, 90, 240);
-      doc.text("Assinatura do Locador", 45, 245);
-      doc.line(120, 240, 180, 240);
-      doc.text("Assinatura do Locatário", 130, 245);
-
-      doc.save(`Contrato_${data.id}_${data.customers.name.replace(/\s/g, '_')}.pdf`);
+      document.body.innerHTML = '<h1>Obrigado!</h1><p>Seu pré-cadastro foi realizado com sucesso. Entraremos em contato em breve.</p>';
     }
 
-    carregarContrato();
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('pre-cadastro').addEventListener('submit', enviarCadastro);
+    });
   </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 600px;
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+    }
+    p {
+        text-align: center;
+        color: #666;
+    }
+    form label {
+      display: block;
+      margin-bottom: 15px;
+      color: #555;
+      font-weight: bold;
+    }
+    input, select {
+      padding: 10px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: #38a169;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #2f855a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <h1>Formulário de Pré-Cadastro</h1>
+      <p>Por favor, preencha seus dados para a locação do equipamento.</p>
+      <form id="pre-cadastro">
+        <label>Nome completo: <input name="name" required /></label>
+        <label>CPF: <input name="cpf" required /></label>
+        <label>RG: <input name="rg" required /></label>
+        <label>Profissão: <input name="profissao" required /></label>
+        <label>Nacionalidade: <input name="nacionalidade" required /></label>
+        <label>Estado civil: <input name="estado_civil" required /></label>
+        <label>Endereço completo (Rua, Nº, Bairro, CEP): <input name="endereco_completo" required /></label>
+        <label>Cidade/Estado: <input name="cidade" required /></label>
+        <label>Telefone (com DDD): <input type="tel" name="phone" required /></label>
+        <label>Email: <input type="email" name="email" required /></label>
+        <hr style="margin: 20px 0; border: 1px solid #eee;">
+        <label>Médico responsável: <input name="medico_responsavel" required /></label>
+        <label>Tipo de cirurgia: <input name="tipo_cirurgia" required /></label>
+        <label>Data da cirurgia: <input type="date" name="data_cirurgia" required /></label>
+        <label>Tempo de locação (Ex: 30 dias): <input name="tempo_locacao" required /></label>
+        <label>Indicação (quem recomendou): <input name="indicacao" /></label>
+        <button type="submit">Enviar Cadastro</button>
+      </form>
+  </div>
 </body>
 </html>

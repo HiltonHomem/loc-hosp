@@ -347,8 +347,50 @@
     <div id="add-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Equipamento</h2><form id="add-equipment-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salvar</button></div></form></div></div>
     <div id="edit-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Equipamento</h2><form id="edit-equipment-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" id="edit-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea id="edit-description" name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea id="edit-additional-info" name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" id="edit-image_url" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" id="edit-rental_price" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Status</label><select id="edit-status" name="status" class="w-full px-3 py-2 border rounded-lg" required><option value="Disponível">Disponível</option><option value="Alugado">Alugado</option><option value="Em Reparo">Em Reparo</option></select></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" id="edit-acquisition_date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="add-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Cliente Manualmente</h2><form id="add-customer-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" id="customer-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Telefone</label><input type="tel" id="customer-phone" name="phone" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Email</label><input type="email" id="customer-email" name="email" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Endereço</label><textarea id="customer-address" name="address" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Salvar</button></div></form></div></div>
-    <div id="edit-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Cliente</h2><form id="edit-customer-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Telefone</label><input type="tel" name="phone" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Email</label><input type="email" name="email" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Endereço</label><textarea name="address" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
-    <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Nova Locação</h2><form id="new-rental-form" class="space-y-4"><input type="hidden" name="equipment_id"><input type="hidden" name="rental_price"><div><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Início da Locação</label><input type="date" id="rental-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto (R$)</label><input type="number" id="rental-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total: <span id="rental-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
+<div id="edit-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+      <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+        <h2 class="text-2xl font-bold mb-6">Editar Cliente</h2>
+        <form id="edit-customer-form" class="space-y-4">
+          <input type="hidden" name="id" id="edit-customer-id">
+          
+          <h4 class="text-lg font-medium text-gray-800 mb-2 border-b pb-2">Informações de Contato</h4>
+          <div><label for="edit-name" class="block text-sm font-medium text-gray-700">Nome Completo:</label><input type="text" id="edit-name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3" required></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label for="edit-phone" class="block text-sm font-medium text-gray-700">Telefone (com DDD):</label><input type="tel" id="edit-phone" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+            <div><label for="edit-email" class="block text-sm font-medium text-gray-700">Email:</label><input type="email" id="edit-email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+          </div>
+          <div><label for="edit-address" class="block text-sm font-medium text-gray-700">Endereço (antigo, referência):</label><textarea id="edit-address" name="address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></textarea></div>
+
+          <hr class="my-6">
+          <h4 class="text-lg font-medium text-gray-800 mb-2 border-b pb-2">Detalhes Pessoais e Endereço</h4>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div><label for="edit-cpf" class="block text-sm font-medium text-gray-700">CPF:</label><input type="text" id="edit-cpf" name="cpf" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+            <div><label for="edit-rg" class="block text-sm font-medium text-gray-700">RG:</label><input type="text" id="edit-rg" name="rg" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+            <div><label for="edit-profissao" class="block text-sm font-medium text-gray-700">Profissão:</label><input type="text" id="edit-profissao" name="profissao" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+            <div><label for="edit-nacionalidade" class="block text-sm font-medium text-gray-700">Nacionalidade:</label><input type="text" id="edit-nacionalidade" name="nacionalidade" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+            <div><label for="edit-estado_civil" class="block text-sm font-medium text-gray-700">Estado Civil:</label><input type="text" id="edit-estado_civil" name="estado_civil" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+          </div>
+          <div><label for="edit-endereco_completo" class="block text-sm font-medium text-gray-700">Endereço Completo (Rua, Nº, Bairro, CEP):</label><input type="text" id="edit-endereco_completo" name="endereco_completo" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+          <div><label for="edit-cidade" class="block text-sm font-medium text-gray-700">Cidade/Estado:</label><input type="text" id="edit-cidade" name="cidade" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+          
+          <hr class="my-6">
+          <h4 class="text-lg font-medium text-gray-800 mb-2 border-b pb-2">Informações Médicas</h4>
+
+          <div><label for="edit-medico_responsavel" class="block text-sm font-medium text-gray-700">Médico Responsável:</label><input type="text" id="edit-medico_responsavel" name="medico_responsavel" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label for="edit-tipo_cirurgia" class="block text-sm font-medium text-gray-700">Tipo de Cirurgia:</label><input type="text" id="edit-tipo_cirurgia" name="tipo_cirurgia" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+            <div><label for="edit-data_cirurgia" class="block text-sm font-medium text-gray-700">Data da Cirurgia:</label><input type="date" id="edit-data_cirurgia" name="data_cirurgia" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+          </div>
+          <div><label for="edit-indicacao" class="block text-sm font-medium text-gray-700">Indicação (quem recomendou):</label><input type="text" id="edit-indicacao" name="indicacao" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+
+          <div class="flex justify-end space-x-4 pt-4">
+            <button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>    <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Nova Locação</h2><form id="new-rental-form" class="space-y-4"><input type="hidden" name="equipment_id"><input type="hidden" name="rental_price"><div><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Início da Locação</label><input type="date" id="rental-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto (R$)</label><input type="number" id="rental-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total: <span id="rental-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
     <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Contrato</h2><form id="edit-contract-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="edit-contract-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="edit-contract-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
     <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
@@ -772,8 +814,8 @@
             } else {
                 // For immediate rentals, call the RPC which also updates equipment status.
                 const { error: rpcError } = await supabaseClient.rpc('create_rental_and_update_equipment', { 
-                    p_equipment_id: rentalData.equipment_id, 
-                    p_customer_id: rentalData.customer_id, 
+                    p_equipment_id: parseInt(rentalData.equipment_id), 
+                    p_customer_id: parseInt(rentalData.customer_id), 
                     p_rental_start_date: rentalData.rental_start_date, 
                     p_expected_return_date: rentalData.expected_return_date, 
                     p_total_price: rentalData.total_price 
@@ -936,7 +978,8 @@
                     ? `<span class="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">Com equipamento</span>`
                     : `<span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Livre</span>`;
                 
-                let actionsHtml = `<button data-id="${customer.id}" class="edit-customer-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>`;
+                let actionsHtml = `<button data-id="${customer.id}" class="edit-customer-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
+                                    <button data-id="${customer.id}" class="delete-customer-button text-red-500 hover:text-red-700 p-1 ml-2">Excluir</button>`;
                 if (customer.situacao_cadastral === 'pendente') {
                     actionsHtml += `<button data-id="${customer.id}" class="approve-customer-button bg-green-500 text-white px-3 py-1 rounded text-sm ml-2">Aprovar</button>`;
                 }
@@ -952,7 +995,44 @@
             }).join('');
             document.querySelectorAll('.edit-customer-button').forEach(b => b.addEventListener('click', handleEditCustomerClick));
             document.querySelectorAll('.approve-customer-button').forEach(b => b.addEventListener('click', handleApproveCustomerClick));
+            document.querySelectorAll('.delete-customer-button').forEach(b => b.addEventListener('click', handleDeleteCustomerClick));
         }
+
+            async function handleDeleteCustomerClick(e) {
+            const customerId = e.currentTarget.dataset.id;
+            const confirmBtn = document.getElementById('confirm-action-button');
+
+            if (!customerId) {
+                showToast('ID do cliente não encontrado.', 'error');
+                return;
+            }
+
+            document.getElementById('confirmation-title').textContent = 'Excluir Cliente Permanentemente';
+            document.getElementById('confirmation-message').textContent =
+                'Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita e todos os dados do cliente serão removidos.';
+
+            openModal('confirmation-modal');
+
+            const confirmHandler = async () => {
+                closeModal('confirmation-modal');
+
+                const { error } = await supabaseClient
+                    .from('customers')
+                    .delete()
+                    .eq('id', customerId);
+
+                if (error) {
+                    console.error('Erro ao excluir cliente:', error);
+                    showToast('Falha ao excluir cliente: ' + error.message, 'error');
+                } else {
+                    showToast('Cliente excluído com sucesso!', 'success');
+                    fetchCustomers();
+                }
+            };
+
+            confirmBtn.addEventListener('click', confirmHandler, { once: true });
+        }
+
 
         async function fetchRentalHistory(searchTerm = '') {
             const sortValue = document.getElementById('history-sort').value.split('-');
@@ -1484,6 +1564,20 @@
             form.email.value = data.email || '';
             form.address.value = data.address || '';
             
+            // Preenche os campos adicionais que você inseriu no modal
+            form.cpf.value = data.cpf || '';
+            form.rg.value = data.rg || '';
+            form.profissao.value = data.profissao || '';
+            form.nacionalidade.value = data.nacionalidade || '';
+            form.estado_civil.value = data.estado_civil || '';
+            form.endereco_completo.value = data.endereco_completo || '';
+            form.cidade.value = data.cidade || '';
+            form.medico_responsavel.value = data.medico_responsavel || '';
+            form.tipo_cirurgia.value = data.tipo_cirurgia || '';
+            form.data_cirurgia.value = data.data_cirurgia || '';
+            form.indicacao.value = data.indicacao || '';
+            // --- FIM DA ADIÇÃO ---
+
             openModal('edit-customer-modal');
         }
 

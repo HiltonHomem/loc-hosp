@@ -43,7 +43,6 @@
 </head>
 <body class="bg-gray-100 md:flex">
 
-    <!-- Sidebar -->
     <aside id="sidebar" class="sidebar sidebar-closed md:sidebar-open bg-slate-800 text-white w-64 fixed inset-y-0 left-0 z-30 md:relative md:translate-x-0 shrink-0">
         <div class="p-6">
             <h1 class="text-2xl font-bold text-center">Gesthos</h1>
@@ -72,14 +71,12 @@
     </aside>
 
     <div class="flex flex-col flex-1">
-        <!-- Header -->
         <header class="bg-white shadow-sm flex justify-between items-center p-4">
             <button id="menu-button" class="text-gray-500 focus:outline-none md:hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg></button>
             <h2 id="page-title" class="text-xl font-semibold text-gray-800">Catálogo</h2>
             <div><button id="make-rental-header-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Fazer Locação</button></div>
         </header>
         
-        <!-- Main Content -->
         <main id="main-content" class="flex-1 p-6 overflow-y-auto">
             <section id="historico" class="page-section hidden">
                 <div class="bg-white p-6 rounded-lg shadow-md">
@@ -121,10 +118,10 @@
                     <h3 class="text-lg font-semibold">Itens do Catálogo</h3>
                     <div class="flex items-center gap-4">
                         <div class="flex items-center">
-                            <button id="grid-view-btn" class="view-btn active-view p-2">
+                            <button id="grid-view-btn" class="view-btn p-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                             </button>
-                            <button id="list-view-btn" class="view-btn p-2">
+                            <button id="list-view-btn" class="view-btn active-view p-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                             </button>
                         </div>
@@ -158,22 +155,22 @@
                         </div>
                     </div>
                 </div>
-                <div id="grid-view-container">
-                    <div id="equipment-list-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                <div id="grid-view-container" class="hidden">
+                <div id="equipment-list-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
                 </div>
-                <div id="list-view-container" class="hidden overflow-x-auto">
-                     <table class="min-w-full bg-white">
-                        <thead class="bg-gray-200">
-                            <tr>
-                                <th class="py-2 px-4 text-left">Equipamento</th>
-                                <th class="py-2 px-4 text-left">Status</th>
-                                <th class="py-2 px-4 text-right">Preço/Dia</th>
-                                <th class="py-2 px-4 text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="equipment-list-table"></tbody>
-                    </table>
-                </div>
+                    <div id="list-view-container" class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="py-2 px-4 text-left">Equipamento</th>
+                                    <th class="py-2 px-4 text-left">Status</th>
+                                    <th class="py-2 px-4 text-right">Preço/Dia</th>
+                                    <th class="py-2 px-4 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="equipment-list-table"></tbody>
+                        </table>
+                    </div>
             </section>
             
             <section id="disponibilidade" class="page-section hidden">
@@ -334,11 +331,8 @@
         </main>
     </div>
 
-    <!-- MODAIS -->
-    <!-- Modal de Escolha para Adicionar Cliente -->
     <div id="customer-add-choice-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Como deseja adicionar o cliente?</h2><div class="flex justify-around space-x-4"><button type="button" id="add-customer-manually-button" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">Adicionar Manualmente</button><button type="button" id="generate-customer-link-button" class="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700">Gerar Link de Cadastro</button></div><button type="button" class="cancel-modal-button absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button></div></div>
     
-    <!-- Modal para Exibir Link Gerado -->
     <div id="generated-link-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg"><h2 class="text-2xl font-bold mb-4">Link de Cadastro Gerado</h2><p class="mb-4 text-gray-600">Envie o link abaixo para o cliente. Ele será válido por 24 horas.</p><div class="flex items-center bg-gray-100 p-2 rounded-lg"><input type="text" id="generated-link-input" readonly class="w-full bg-transparent border-none text-gray-700 focus:ring-0"><button id="copy-link-button" class="ml-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Copiar</button></div><div class="text-right mt-6"><button type="button" class="cancel-modal-button px-6 py-2 bg-gray-300 rounded-lg">Fechar</button></div></div></div>
 
     <div id="confirmation-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-4" id="confirmation-title">Confirmar Ação</h2><p id="confirmation-message" class="mb-6">Tem a certeza que deseja prosseguir?</p><div class="flex justify-end space-x-4"><button type="button" id="cancel-confirmation-button" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="button" id="confirm-action-button" class="px-4 py-2 bg-red-600 text-white rounded-lg">Confirmar</button></div></div></div>
@@ -394,8 +388,7 @@
     <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Contrato</h2><form id="edit-contract-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="edit-contract-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="edit-contract-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
     <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
-     <!-- Modal para aprovar cliente -->
-    <div id="approve-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+     <div id="approve-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg">
             <h2 class="text-2xl font-bold mb-4">Aprovar Cliente Pendente</h2>
             <div id="approve-customer-details" class="space-y-2 mb-6 text-gray-700"></div>
@@ -406,7 +399,6 @@
         </div>
     </div>
 
-    <!-- Container para as notificações Toast -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-3 overflow-hidden"></div>
 
     <script>
@@ -534,7 +526,7 @@
                 });
             });
 
-            menuButton.addEventListener('click', () => sidebar.classList.toggle('sidebar-closed'));
+            switchCatalogView('list'); // Iniciar na visualização de lista
             fetchEquipments(); // Start on catalog view
         });
 
@@ -1105,6 +1097,9 @@
                                         <span class="text-xl font-bold text-blue-600">${formatCurrency(eq.rental_price)}/dia</span>
                                         <span class="text-sm font-medium px-2 py-1 rounded-full ${statusColor}">${statusText}</span>
                                     </div>
+                                    <div class="mt-4 text-right">
+                                        <button data-id="${eq.id}" class="delete-equipment-button bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Excluir</button>
+                                    </div>
                                 </div>
                             </div>`;
                 }).join('');
@@ -1131,12 +1126,14 @@
                                 </td>
                                 <td class="py-2 px-4 text-right">${formatCurrency(eq.rental_price)}</td>
                                 <td class="py-2 px-4 text-center">
-                                    <button class="text-blue-600 hover:underline text-sm">Ver Detalhes</button>
+                                    <button class="text-blue-600 hover:underline text-sm" onclick="handleEquipmentCardClick(event)">Ver Detalhes</button>
+                                    <button data-id="${eq.id}" class="delete-equipment-button text-red-500 hover:text-red-700 p-1 ml-2">Excluir</button>
                                 </td>
                             </tr>`;
                 }).join('');
             }
             document.querySelectorAll('.equipment-card').forEach(c => c.addEventListener('click', handleEquipmentCardClick));
+            document.querySelectorAll('.delete-equipment-button').forEach(b => b.addEventListener('click', handleDeleteEquipmentClick));
         }
 
         async function fetchEquipments(statusFilter = null, searchTerm = '') {
@@ -1361,7 +1358,6 @@
             doc.text("3. PRAZO E VALOR", 20, y); y+=7;
             doc.setFont("helvetica", "normal");
             doc.text(`- Período da Locação: De ${formatDate(contract.rental_start_date)} até ${formatDate(contract.expected_return_date)}.`, 20, y); y+=7;
-            doc.text(`- Tempo de Locação (informado): ${customer.tempo_locacao}.`, 20, y); y+=7;
             doc.text(`- Valor Total do Contrato: ${formatCurrency(contract.total_price)}.`, 20, y); y+=15;
 
             doc.setFont("helvetica", "bold");
@@ -1733,6 +1729,46 @@
             form.actual_return_date.valueAsDate = new Date();
 
             openModal('return-modal');
+        }
+
+        async function handleDeleteEquipmentClick(e) {
+            e.stopPropagation(); // Evita que o evento do card seja acionado
+            const equipmentId = e.currentTarget.dataset.id;
+            const confirmBtn = document.getElementById('confirm-action-button');
+            const cancelBtn = document.getElementById('cancel-confirmation-button');
+            const modal = document.getElementById('confirmation-modal');
+
+            document.getElementById('confirmation-title').textContent = 'Excluir Equipamento';
+            document.getElementById('confirmation-message').textContent = 'Tem a certeza que deseja excluir permanentemente este equipamento? Esta ação não pode ser desfeita.';
+
+            openModal('confirmation-modal');
+
+            const confirmHandler = async () => {
+                const { error } = await supabaseClient.from('equipment').delete().eq('id', equipmentId);
+                
+                closeModal('confirmation-modal');
+                if (error) {
+                    showToast('Falha ao excluir equipamento: ' + error.message, 'error');
+                } else {
+                    showToast('Equipamento excluído com sucesso!', 'success');
+                    fetchEquipments(); // Atualizar a lista após a exclusão
+                    fetchAvailability(); // Atualizar a disponibilidade também
+                }
+                // Remover listeners para evitar múltiplas execuções
+                confirmBtn.removeEventListener('click', confirmHandler);
+                cancelBtn.removeEventListener('click', cancelHandler);
+            };
+            
+            const cancelHandler = () => {
+                closeModal('confirmation-modal');
+                // Remover listeners para evitar múltiplas execuções
+                confirmBtn.removeEventListener('click', confirmHandler);
+                cancelBtn.removeEventListener('click', cancelHandler);
+            };
+
+            // Adicionar listeners. Use { once: true } para que sejam executados apenas uma vez
+            confirmBtn.addEventListener('click', confirmHandler, { once: true });
+            cancelBtn.addEventListener('click', cancelHandler, { once: true });
         }
     </script>
 </body>

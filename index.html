@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Locação de Material Hospitalar</title>
+    <title>Sistema Bio Poltronas Niteroi </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -46,7 +46,7 @@
     <aside id="sidebar" class="sidebar sidebar-closed md:sidebar-open bg-slate-800 text-white w-64 fixed inset-y-0 left-0 z-30 md:relative md:translate-x-0 shrink-0">
         <div class="p-6">
             <h1 class="text-2xl font-bold text-center">Bio Poltronas</h1>
-            <p class="text-sm text-center text-slate-400">Locação Hospitalar</p>
+            <p class="text-sm text-center text-slate-400">Locação</p>
         </div>
         <nav class="mt-8">
             <a href="#catalogo" class="flex items-center px-6 py-3 text-slate-200 hover:bg-slate-700 nav-link">
@@ -164,7 +164,7 @@
                                 <tr>
                                     <th class="py-2 px-4 text-left">Equipamento</th>
                                     <th class="py-2 px-4 text-left">Status</th>
-                                    <th class="py-2 px-4 text-right">Preço/Dia</th>
+                                    
                                     <th class="py-2 px-4 text-center">Ações</th>
                                 </tr>
                             </thead>
@@ -338,8 +338,8 @@
     <div id="confirmation-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-4" id="confirmation-title">Confirmar Ação</h2><p id="confirmation-message" class="mb-6">Tem a certeza que deseja prosseguir?</p><div class="flex justify-end space-x-4"><button type="button" id="cancel-confirmation-button" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="button" id="confirm-action-button" class="px-4 py-2 bg-red-600 text-white rounded-lg">Confirmar</button></div></div></div>
     <div id="extend-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Estender Contrato</h2><form id="extend-rental-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><input type="hidden" name="original_return_date"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="extend-equipment-name" class="text-lg font-semibold"></p></div><div><label for="new-return-date" class="block text-gray-700">Nova Data de Devolução</label><input type="date" id="new-return-date" name="new_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto Adicional (R$)</label><input type="number" id="extend-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total Atualizado: <span id="extend-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar Extensão</button></div></form></div></div>
     <div id="equipment-details-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col"><div class="flex justify-between items-start mb-4"><h2 class="text-2xl font-bold equipment-name"></h2><button type="button" class="cancel-modal-button text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button></div><div class="flex-grow overflow-y-auto"><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><img src="https://placehold.co/600x400" alt="Equipment Image" class="equipment-image w-full h-64 object-cover rounded-lg mb-4"><div><h3 class="font-semibold text-lg border-b pb-2 mb-2">Preço</h3><p class="text-2xl font-bold text-blue-600 equipment-price"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2 mt-4">Data de Aquisição</h3><p class="text-gray-700 equipment-acquisition-date"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2 mt-4">Descrição</h3><p class="text-gray-700 equipment-description mb-4"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2">Informações Adicionais</h3><p class="text-gray-700 equipment-additional-info"></p></div></div><div class="mt-6"><h3 class="font-semibold text-lg border-b pb-2 mb-2">Histórico de Locações</h3><div class="overflow-x-auto max-h-48"><table class="min-w-full bg-white"><thead class="bg-gray-200 sticky top-0"><tr><th class="py-2 px-4 text-left">Cliente</th><th class="py-2 px-4 text-left">Início</th><th class="py-2 px-4 text-left">Fim</th><th class="py-2 px-4 text-left">Status</th></tr></thead><tbody id="equipment-rental-history-table"></tbody></table></div></div></div><div class="flex justify-end space-x-4 pt-6 mt-auto border-t"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Fechar</button><button type="button" class="edit-button-modal bg-yellow-400 text-yellow-900 hover:bg-yellow-500 font-semibold py-2 px-4 rounded-lg">Editar Equipamento</button></div></div></div>
-    <div id="add-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Equipamento</h2><form id="add-equipment-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salvar</button></div></form></div></div>
-    <div id="edit-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Equipamento</h2><form id="edit-equipment-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" id="edit-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea id="edit-description" name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea id="edit-additional-info" name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" id="edit-image_url" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Preço/Dia (R$)</label><input type="number" id="edit-rental_price" name="rental_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Status</label><select id="edit-status" name="status" class="w-full px-3 py-2 border rounded-lg" required><option value="Disponível">Disponível</option><option value="Alugado">Alugado</option><option value="Em Reparo">Em Reparo</option></select></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" id="edit-acquisition_date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
+    <div id="add-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Equipamento</h2><form id="add-equipment-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salvar</button></div></form></div></div>
+    <div id="edit-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Equipamento</h2><form id="edit-equipment-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" id="edit-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea id="edit-description" name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea id="edit-additional-info" name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" id="edit-image_url" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Status</label><select id="edit-status" name="status" class="w-full px-3 py-2 border rounded-lg" required><option value="Disponível">Disponível</option><option value="Alugado">Alugado</option><option value="Em Reparo">Em Reparo</option></select></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" id="edit-acquisition_date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="add-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Cliente Manualmente</h2><form id="add-customer-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" id="customer-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Telefone</label><input type="tel" id="customer-phone" name="phone" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Email</label><input type="email" id="customer-email" name="email" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Endereço</label><textarea id="customer-address" name="address" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Salvar</button></div></form></div></div>
 <div id="edit-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
       <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
@@ -378,13 +378,44 @@
           </div>
           <div><label for="edit-indicacao" class="block text-sm font-medium text-gray-700">Indicação (quem recomendou):</label><input type="text" id="edit-indicacao" name="indicacao" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
 
+          <!-- NEW SECTION FOR DOCUMENTS -->
+          <hr class="my-6">
+          <h4 class="text-lg font-medium text-gray-800 mb-2 border-b pb-2">Documentos</h4>
+          <div class="space-y-4">
+              <div>
+                  <label class="block text-sm font-medium text-gray-700">Comprovante de Residência</label>
+                  <div id="edit-customer-comprovante-status" class="mt-1 text-sm text-gray-600">Carregando...</div>
+                  <input type="file" name="new_comprovante_residencia" accept=".pdf,.jpg,.jpeg,.png" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-gray-700">Documento de Identidade</label>
+                  <div id="edit-customer-documento-status" class="mt-1 text-sm text-gray-600">Carregando...</div>
+                  <input type="file" name="new_documento_identidade" accept=".pdf,.jpg,.jpeg,.png" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+              </div>
+          </div>
+          <!-- END OF NEW SECTION -->
+
+
           <div class="flex justify-end space-x-4 pt-4">
             <button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
             <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button>
           </div>
         </form>
       </div>
-    </div>    <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Nova Locação</h2><form id="new-rental-form" class="space-y-4"><input type="hidden" name="equipment_id"><input type="hidden" name="rental_price"><div><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Início da Locação</label><input type="date" id="rental-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto (R$)</label><input type="number" id="rental-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total: <span id="rental-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
+    </div>    <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Nova Locação</h2><form id="new-rental-form" class="space-y-4"><input type="hidden" name="equipment_id"><input type="hidden" name="rental_price"><div><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Início da Locação</label><input type="date" id="rental-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto (R$)</label><input type="number" id="rental-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t">
+        <div>
+        <label class="block text-gray-700">Novo Valor da Locação (R$)</label>
+        <input type="number" name="total_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required>
+        </div>
+        <div>
+        <label class="block text-gray-700">Valor do Frete (R$)</label>
+        <input type="number" name="freight" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00">
+        </div>
+        <div class="mt-4 text-right">
+        <p class="text-lg font-semibold text-gray-800">Valor Total: <span id="calculated-total" class="text-blue-600">R$ 0,00</span></p>
+        </div>
+
+</div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
     <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Contrato</h2><form id="edit-contract-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="edit-contract-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="edit-contract-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
     <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
     <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
@@ -396,6 +427,62 @@
                 <button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
                 <button type="button" id="confirm-approve-button" class="px-4 py-2 bg-green-600 text-white rounded-lg">Aprovar Cliente</button>
             </div>
+        </div>
+    </div>
+    
+    <!-- NEW MODAL FOR PDF PREVIEW -->
+    <div id="pdf-preview-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col">
+            <h2 class="text-2xl font-bold mb-6 text-center">Pré-visualização do Contrato</h2>
+            <form id="pdf-preview-form" class="flex-grow overflow-y-auto pr-4 space-y-6">
+                
+                <fieldset class="border p-4 rounded-lg">
+                    <legend class="px-2 font-semibold">LOCADORA</legend>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700">Nome/Razão Social:</label><input type="text" name="locadora_nome" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">CNPJ:</label><input type="text" name="locadora_cnpj" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div class="col-span-2"><label class="block text-sm font-medium text-gray-700">Endereço:</label><input type="text" name="locadora_endereco" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border p-4 rounded-lg">
+                    <legend class="px-2 font-semibold">LOCATÁRIO(A)</legend>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="col-span-3"><label class="block text-sm font-medium text-gray-700">Nome Completo:</label><input type="text" name="locatario_nome" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Nacionalidade:</label><input type="text" name="locatario_nacionalidade" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Estado Civil:</label><input type="text" name="locatario_estado_civil" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Profissão:</label><input type="text" name="locatario_profissao" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">CPF:</label><input type="text" name="locatario_cpf" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">RG:</label><input type="text" name="locatario_rg" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div class="col-span-3"><label class="block text-sm font-medium text-gray-700">Endereço:</label><input type="text" name="locatario_endereco" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border p-4 rounded-lg">
+                    <legend class="px-2 font-semibold">Detalhes da Locação</legend>
+                    <div><label class="block text-sm font-medium text-gray-700">Objeto (Descrição do Equipamento):</label><textarea name="objeto_descricao" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></textarea></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div><label class="block text-sm font-medium text-gray-700">Data de Início:</label><input type="date" name="data_inicio" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Data de Fim:</label><input type="date" name="data_fim" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Prazo (dias):</label><input type="number" name="prazo_dias" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                    </div>
+                </fieldset>
+                
+                 <fieldset class="border p-4 rounded-lg">
+                    <legend class="px-2 font-semibold">Valores e Pagamento</legend>
+                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div><label class="block text-sm font-medium text-gray-700">Valor Total (R$):</label><input type="number" step="0.01" name="valor_total" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Sinal (R$):</label><input type="number" step="0.01" name="valor_sinal" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3" placeholder="0.00"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Frete (R$):</label><input type="number" step="0.01" name="valor_frete" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Diária Extra (R$):</label><input type="number" step="0.01" name="valor_diaria_extra" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+                    </div>
+                </fieldset>
+
+                <div class="flex justify-end space-x-4 pt-4 mt-auto border-t">
+                    <button type="button" class="cancel-modal-button px-6 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">Cancelar</button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Gerar PDF</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -477,11 +564,11 @@
             }));
             
             // New Rental Price Calculation
-            document.getElementById('rental-start-date').addEventListener('change', calculateTotalPrice);
-            document.getElementById('rental-return-date').addEventListener('change', calculateTotalPrice);
-            document.getElementById('rental-discount').addEventListener('input', calculateTotalPrice);
-            document.getElementById('new-return-date').addEventListener('change', calculateExtendedTotalPrice);
-            document.getElementById('extend-discount').addEventListener('input', calculateExtendedTotalPrice);
+            //document.getElementById('rental-start-date').addEventListener('change', calculateTotalPrice);
+            //document.getElementById('rental-return-date').addEventListener('change', calculateTotalPrice);
+            //document.getElementById('rental-discount').addEventListener('input', calculateTotalPrice);
+            //document.getElementById('new-return-date').addEventListener('change', calculateExtendedTotalPrice);
+            //document.getElementById('extend-discount').addEventListener('input', calculateExtendedTotalPrice);
 
             // Catalog View Switcher
             document.getElementById('grid-view-btn').addEventListener('click', () => switchCatalogView('grid'));
@@ -497,7 +584,7 @@
             document.getElementById('add-expense-form').addEventListener('submit', handleNewExpenseSubmit);
             document.getElementById('extend-rental-form').addEventListener('submit', handleExtendRentalSubmit);
             document.getElementById('return-form').addEventListener('submit', handleReturnSubmit);
-
+            document.getElementById('pdf-preview-form').addEventListener('submit', handleGeneratePdfFromForm); // Listener para novo form
             // Catalog Status Filters
             document.querySelectorAll('#catalog-filters .filter-btn').forEach(btn => {
                 btn.addEventListener('click', (event) => {
@@ -526,9 +613,35 @@
                 });
             });
 
+            //sistema de frete
+             const rentalInput = document.querySelector('input[name="total_price"]');
+            const freightInput = document.querySelector('input[name="freight"]');
+            const discountInput = document.querySelector('rental-discount');
+
+            if (rentalInput) rentalInput.addEventListener('input', updateCalculatedTotal);
+            if (freightInput) freightInput.addEventListener('input', updateCalculatedTotal);
+            if (discountInput) discountInput.addEventListener('input', updateCalculatedTotal);
+
             switchCatalogView('list'); // Iniciar na visualização de lista
             fetchEquipments(); // Start on catalog view
         });
+
+        function updateCalculatedTotal() {
+            const rentalInput = document.querySelector('input[name="total_price"]');
+            const freightInput = document.querySelector('input[name="freight"]');
+            const discountInput = document.querySelector('rental-discount');
+
+            const rentalValue = parseFloat(rentalInput?.value) || 0;
+            const freightValue = parseFloat(freightInput?.value) || 0;
+            const discountValue = parseFloat(discountInput?.value) || 0;
+
+            const total = rentalValue + freightValue - discountValue;
+            const totalElement = document.getElementById('calculated-total');
+
+            if (totalElement) {
+                totalElement.textContent = `R$ ${total.toFixed(2)}`;
+            }
+        }
 
         function switchCatalogView(view) {
             currentCatalogView = view;
@@ -587,9 +700,9 @@
             }, 4000);
         }
 
-        function calculateTotalPrice() {
-            const form = document.getElementById('new-rental-form');
-            const startDateValue = form.rental_start_date.value;
+        /* function calculateTotalPrice() {
+           const form = document.getElementById('new-rental-form');
+           const startDateValue = form.rental_start_date.value;
             const returnDateValue = form.expected_return_date.value;
             const dailyPrice = parseFloat(form.rental_price.value);
             const discount = parseFloat(form.discount.value) || 0;
@@ -612,10 +725,10 @@
             const subtotal = days * dailyPrice;
             const total = subtotal - discount;
 
-            totalPriceEl.textContent = formatCurrency(Math.max(0, total));
-        }
+           totalPriceEl.textContent = formatCurrency(Math.max(0, total));
+        } */
 
-        function calculateExtendedTotalPrice() {
+        /*function calculateExtendedTotalPrice() {
             const form = document.getElementById('extend-rental-form');
             const newReturnDateValue = form.new_return_date.value;
             const dailyPrice = parseFloat(form.daily_price.value);
@@ -634,7 +747,7 @@
             const total = subtotal - discount;
 
             totalPriceEl.textContent = formatCurrency(Math.max(0, total));
-        }
+        }*/
 
         function copyToClipboard() {
             const linkInput = document.getElementById('generated-link-input');
@@ -737,19 +850,108 @@
 
         async function handleEditCustomerSubmit(e) {
             e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-            const id = data.id;
-            delete data.id;
-
-            const { error } = await supabaseClient.from('customers').update(data).eq('id', id);
-            if (error) return showToast('Falha ao atualizar cliente: ' + error.message, 'error');
+            const form = e.target;
+            const formData = new FormData(form);
+            const dataToUpdate = Object.fromEntries(formData.entries());
+            const id = dataToUpdate.id;
             
-            showToast('Cliente atualizado com sucesso!', 'success');
-            e.target.reset();
-            closeModal('edit-customer-modal');
-            fetchCustomers();
+            delete dataToUpdate.id;
+            delete dataToUpdate.new_comprovante_residencia;
+            delete dataToUpdate.new_documento_identidade;
+
+            const newComprovanteFile = form.elements['new_comprovante_residencia'].files[0];
+            const newDocumentoFile = form.elements['new_documento_identidade'].files[0];
+            
+            async function uploadFileForCustomer(nomeCampo, file, customerId) {
+                const safeFileName = file.name
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .replace(/\s/g, '_')
+                  .replace(/[^a-zA-Z0-9_.-]/g, '');
+                const filePath = `clientes/${customerId}/${nomeCampo}-${Date.now()}-${safeFileName}`;
+                const { data, error } = await supabaseClient
+                  .storage
+                  .from('documentos-clientes')
+                  .upload(filePath, file);
+
+                if (error) throw error;
+                return data.path;
+            }
+
+            try {
+                // First, fetch the current customer data to get old file paths
+                const { data: currentCustomer, error: fetchError } = await supabaseClient
+                    .from('customers')
+                    .select('comprovante_residencia_url, documento_identidade_url')
+                    .eq('id', id)
+                    .single();
+
+                if (fetchError) {
+                    throw new Error('Erro ao buscar dados do cliente para atualização: ' + fetchError.message);
+                }
+
+                // Handle new proof of residence file
+                if (newComprovanteFile) {
+                    showToast('Enviando novo comprovante...', 'info');
+                    const path = await uploadFileForCustomer('comprovante_residencia', newComprovanteFile, id);
+                    dataToUpdate.comprovante_residencia_url = path;
+                    
+                    // After successful upload, delete the old file if it exists
+                    if (currentCustomer.comprovante_residencia_url) {
+                        const { error: removeError } = await supabaseClient
+                            .storage
+                            .from('documentos-clientes')
+                            .remove([currentCustomer.comprovante_residencia_url]);
+                        
+                        if (removeError) {
+                            // Log the error but don't stop the process
+                            console.error("Erro ao remover comprovante antigo:", removeError.message);
+                            showToast('Aviso: Não foi possível remover o arquivo antigo.', 'error');
+                        }
+                    }
+                }
+
+                // Handle new identity document file
+                if (newDocumentoFile) {
+                    showToast('Enviando novo documento...', 'info');
+                    const path = await uploadFileForCustomer('documento_identidade', newDocumentoFile, id);
+                    dataToUpdate.documento_identidade_url = path;
+
+                    // After successful upload, delete the old file if it exists
+                    if (currentCustomer.documento_identidade_url) {
+                        const { error: removeError } = await supabaseClient
+                            .storage
+                            .from('documentos-clientes')
+                            .remove([currentCustomer.documento_identidade_url]);
+                        
+                        if (removeError) {
+                            console.error("Erro ao remover documento antigo:", removeError.message);
+                            showToast('Aviso: Não foi possível remover o arquivo antigo.', 'error');
+                        }
+                    }
+                }
+
+                // Update the database with all new information
+                if (Object.keys(dataToUpdate).length > 0) {
+                    const { error: updateError } = await supabaseClient
+                        .from('customers')
+                        .update(dataToUpdate)
+                        .eq('id', id);
+
+                    if (updateError) throw updateError;
+                }
+                
+                showToast('Cliente atualizado com sucesso!', 'success');
+                form.reset();
+                closeModal('edit-customer-modal');
+                fetchCustomers();
+
+            } catch (error) {
+                console.error('Falha ao atualizar cliente:', error);
+                showToast('Falha ao atualizar cliente: ' + error.message, 'error');
+            }
         }
+
 
         async function handleNewRentalSubmit(e) {
             e.preventDefault();
@@ -758,7 +960,9 @@
             const startDate = new Date(formData.get('rental_start_date') + "T00:00:00");
             const returnDate = new Date(formData.get('expected_return_date') + "T00:00:00");
             const discount = parseFloat(formData.get('discount')) || 0;
-            
+            const totalPrice = parseFloat(formData.get('total_price'));
+            const freight = parseFloat(formData.get('freight')) || 0;
+
             if (returnDate <= startDate) {
                 return showToast('A data de devolução deve ser posterior à data de início.', 'error');
             }
@@ -776,8 +980,9 @@
                 customer_id: formData.get('customer_id'),
                 rental_start_date: startDate.toISOString(),
                 expected_return_date: returnDate.toISOString(),
-                total_price: Math.max(0, total),
-                status: status
+                total_price: totalPrice + freight,
+                status: status,
+                freight: freight
             };
             
             const { data: conflictingRentals, error: conflictError } = await supabaseClient
@@ -874,7 +1079,8 @@
             const equipmentId = parseInt(form.equipment_id.value);
             const newReturnDate = form.new_return_date.value;
             const originalReturnDate = form.original_return_date.value;
-            
+            const totalPrice = parseFloat(formData.get('total_price'));
+
             if (new Date(newReturnDate) <= new Date(originalReturnDate)) {
                 return showToast('A nova data deve ser posterior à data de devolução original.', 'error');
             }
@@ -991,39 +1197,39 @@
         }
 
             async function handleDeleteCustomerClick(e) {
-            const customerId = e.currentTarget.dataset.id;
-            const confirmBtn = document.getElementById('confirm-action-button');
+                const customerId = e.currentTarget.dataset.id;
+                const confirmBtn = document.getElementById('confirm-action-button');
 
-            if (!customerId) {
-                showToast('ID do cliente não encontrado.', 'error');
-                return;
-            }
-
-            document.getElementById('confirmation-title').textContent = 'Excluir Cliente Permanentemente';
-            document.getElementById('confirmation-message').textContent =
-                'Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita e todos os dados do cliente serão removidos.';
-
-            openModal('confirmation-modal');
-
-            const confirmHandler = async () => {
-                closeModal('confirmation-modal');
-
-                const { error } = await supabaseClient
-                    .from('customers')
-                    .delete()
-                    .eq('id', customerId);
-
-                if (error) {
-                    console.error('Erro ao excluir cliente:', error);
-                    showToast('Falha ao excluir cliente: ' + error.message, 'error');
-                } else {
-                    showToast('Cliente excluído com sucesso!', 'success');
-                    fetchCustomers();
+                if (!customerId) {
+                    showToast('ID do cliente não encontrado.', 'error');
+                    return;
                 }
-            };
 
-            confirmBtn.addEventListener('click', confirmHandler, { once: true });
-        }
+                document.getElementById('confirmation-title').textContent = 'Excluir Cliente Permanentemente';
+                document.getElementById('confirmation-message').textContent =
+                    'Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita e todos os dados do cliente serão removidos.';
+
+                openModal('confirmation-modal');
+
+                const confirmHandler = async () => {
+                    closeModal('confirmation-modal');
+
+                    const { error } = await supabaseClient
+                        .from('customers')
+                        .delete()
+                        .eq('id', customerId);
+
+                    if (error) {
+                        console.error('Erro ao excluir cliente:', error);
+                        showToast('Falha ao excluir cliente: ' + error.message, 'error');
+                    } else {
+                        showToast('Cliente excluído com sucesso!', 'success');
+                        fetchCustomers();
+                    }
+                };
+
+                confirmBtn.addEventListener('click', confirmHandler, { once: true });
+            }
 
 
         async function fetchRentalHistory(searchTerm = '') {
@@ -1094,7 +1300,7 @@
                                     <h3 class="text-lg font-semibold">${eq.name}</h3>
                                     ${rentalInfoHtml}
                                     <div class="flex justify-between items-center mt-2">
-                                        <span class="text-xl font-bold text-blue-600">${formatCurrency(eq.rental_price)}/dia</span>
+                                        
                                         <span class="text-sm font-medium px-2 py-1 rounded-full ${statusColor}">${statusText}</span>
                                     </div>
                                     <div class="mt-4 text-right">
@@ -1124,7 +1330,7 @@
                                 <td class="py-2 px-4">
                                     <span class="text-sm font-medium px-2 py-1 rounded-full ${statusColor}">${statusText}</span>
                                 </td>
-                                <td class="py-2 px-4 text-right">${formatCurrency(eq.rental_price)}</td>
+                                
                                 <td class="py-2 px-4 text-center">
                                     <button class="text-blue-600 hover:underline text-sm" onclick="handleEquipmentCardClick(event)">Ver Detalhes</button>
                                     <button data-id="${eq.id}" class="delete-equipment-button text-red-500 hover:text-red-700 p-1 ml-2">Excluir</button>
@@ -1290,92 +1496,185 @@
 
         function handleGeneratePDFClick(e) {
             const contractData = JSON.parse(e.currentTarget.dataset.contract);
-            generateContractPDF(contractData);
+            populatePdfPreviewForm(contractData);
+            openModal('pdf-preview-modal');
         }
 
-        function generateContractPDF(contract) {
+        // NEW: This function populates the new modal with contract data
+        function populatePdfPreviewForm(contract) {
+            const form = document.getElementById('pdf-preview-form');
+            const customer = contract.customers || {};
+            
+            // Locadora (Landlord) - Fill with default or stored values
+            form.elements['locadora_nome'].value = 'BIO POLTRONAS LOCAÇÕES NITERÓI-RJ LTDA';
+            form.elements['locadora_cnpj'].value = '61.053.004/0001-22'; // Example CNPJ
+            form.elements['locadora_endereco'].value = 'Itaipu, Niterói/RJ'; // Example Address
+
+            // Locatário (Tenant)
+            form.elements['locatario_nome'].value = customer.name || '';
+            form.elements['locatario_nacionalidade'].value = customer.nacionalidade || 'Brasileiro(a)';
+            form.elements['locatario_estado_civil'].value = customer.estado_civil || '';
+            form.elements['locatario_profissao'].value = customer.profissao || '';
+            form.elements['locatario_cpf'].value = customer.cpf || '';
+            form.elements['locatario_rg'].value = customer.rg || '';
+            form.elements['locatario_endereco'].value = customer.endereco_completo || '';
+
+            // Object
+            form.elements['objeto_descricao'].value = `01 (uma) Poltrona Elétrica Pós-Operatório, com mecanismo lift, reclínio automático, em corino bege, porta-copos na cor preta, controle com fio, fonte de energia nova e capa dupla face impermeável`;
+
+            // Dates and Duration
+            const startDate = new Date(contract.rental_start_date);
+            const endDate = new Date(contract.expected_return_date);
+            
+            // Correct for timezone issues when displaying in input type="date"
+            startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
+            endDate.setMinutes(endDate.getMinutes() + endDate.getTimezoneOffset());
+
+            form.elements['data_inicio'].value = startDate.toISOString().split('T')[0];
+            form.elements['data_fim'].value = endDate.toISOString().split('T')[0];
+            const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            form.elements['prazo_dias'].value = duration;
+
+            // Values
+            form.elements['valor_total'].value = contract.total_price || 0.00;
+            form.elements['valor_frete'].value = contract.freight || 0.00;
+            form.elements['valor_sinal'].value = ''; // You might need to add a "deposit" field to your rentals table
+            form.elements['valor_diaria_extra'].value = '80.00'; // Default value, can be changed
+        }
+
+        // NEW: Handles the submission of the preview form and calls the PDF generation
+        function handleGeneratePdfFromForm(e) {
+            e.preventDefault();
+            const formData = Object.fromEntries(new FormData(e.target).entries());
+            generateContractPDF(formData);
+            closeModal('pdf-preview-modal');
+        }
+
+        // REWRITTEN: Generates the PDF based on the preview form data, matching the new layout
+        function generateContractPDF(data) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-            const customer = contract.customers;
+            let y = 0;
+            let splitText;
 
-            doc.setFontSize(18);
-            doc.setFont("helvetica", "bold");
-            doc.text("Contrato de Locação de Equipamento Hospitalar", 105, 20, { align: "center" });
-
-            // --- LOCADOR ---
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
-            doc.text("LOCADOR(A):", 20, 35);
-            doc.setFont("helvetica", "normal");
-            doc.text("Bio Poltronas - Locação Hospitalar", 20, 42);
-            doc.text("CNPJ: XX.XXX.XXX/0001-XX", 20, 49); // Exemplo
-            doc.text("Endereço: Rua Exemplo, 123, Cidade, Estado", 20, 56); // Exemplo
-
-            // --- LOCATÁRIO ---
-            doc.setFont("helvetica", "bold");
-            doc.text("LOCATÁRIO(A):", 20, 70);
-            doc.setFont("helvetica", "normal");
-            let y = 77;
-            const addField = (label, value) => {
-                if(value) {
-                    doc.text(`${label}: ${value}`, 20, y);
-                    y += 7;
+            const checkPageBreak = (spaceNeeded) => {
+                if (y + spaceNeeded > 280) { 
+                    doc.addPage();
+                    y = 20; 
                 }
             };
 
-            addField("Nome", customer.name);
-            addField("CPF", customer.cpf);
-            addField("RG", customer.rg);
-            addField("Endereço", customer.endereco_completo);
-            addField("Cidade", customer.cidade);
-            addField("Nacionalidade", customer.nacionalidade);
-            addField("Estado Civil", customer.estado_civil);
-            addField("Profissão", customer.profissao);
-            
-            y += 7; // Espaçamento extra
-            doc.setLineWidth(0.5);
-            doc.line(20, y, 190, y);
-            y += 10;
-            
+            doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
-            doc.text("1. OBJETO DO CONTRATO", 20, y); y += 7;
-            doc.setFont("helvetica", "normal");
-            doc.text(`O presente contrato tem como objeto a locação do seguinte equipamento:`, 20, y); y += 7;
-            doc.setFont("helvetica", "bold");
-            doc.text(`- Equipamento: ${contract.equipment.name}`, 25, y); y += 10;
-            
-            doc.setFont("helvetica", "bold");
-            doc.text("2. DADOS DA CIRURGIA E USO", 20, y); y += 7;
-            doc.setFont("helvetica", "normal");
-            addField("Médico Responsável", customer.medico_responsavel);
-            addField("Tipo de Cirurgia", customer.tipo_cirurgia);
-            addField("Data da Cirurgia", formatDate(customer.data_cirurgia));
-            addField("Indicação", customer.indicacao);
-            
-            y += 7;
+            doc.text("CONTRATO DE LOCAÇÃO DE POLTRONA ELÉTRICA PÓS-OPERATÓRIO", 105, 15, { align: "center", maxWidth: 180 });
 
-            doc.setFont("helvetica", "bold");
-            doc.text("3. PRAZO E VALOR", 20, y); y+=7;
-            doc.setFont("helvetica", "normal");
-            doc.text(`- Período da Locação: De ${formatDate(contract.rental_start_date)} até ${formatDate(contract.expected_return_date)}.`, 20, y); y+=7;
-            doc.text(`- Valor Total do Contrato: ${formatCurrency(contract.total_price)}.`, 20, y); y+=15;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("4. CLÁUSULAS GERAIS", 20, y); y+=7;
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
-            const clauses = `O LOCATÁRIO obriga-se a zelar pela conservação do equipamento alugado, utilizando-o de acordo com as suas especificações. Qualquer dano causado por mau uso será de responsabilidade do LOCATÁRIO. O equipamento deve ser devolvido nas mesmas condições em que foi recebido, salvo o desgaste natural pelo uso regular.`;
-            const splitClauses = doc.splitTextToSize(clauses, 170);
-            doc.text(splitClauses, 20, y);
-            y += (splitClauses.length * 5) + 20;
+            
+            y = 25;
+            const partiesText = `Pelo presente instrumento particular, de um lado ${data.locadora_nome}, inscrita no CNPJ nº ${data.locadora_cnpj}, com sede em ${data.locadora_endereco}, doravante denominada simplesmente LOCADORA, e de outro lado ${data.locatario_nome}, nacionalidade ${data.locatario_nacionalidade}, estado civil ${data.locatario_estado_civil}, profissão ${data.locatario_profissao}, portador(a) do RG nº ${data.locatario_rg} e do CPF nº ${data.locatario_cpf}, residente e domiciliado(a) na ${data.locatario_endereco}, doravante denominado(a) simplesmente LOCATÁRIO(A), têm entre si, justo e contratado, o presente Contrato de Locação de Poltrona Elétrica Pós-Operatório, que se regerá pelas cláusulas e condições a seguir:`;
+            splitText = doc.splitTextToSize(partiesText, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 5;
+            
+            checkPageBreak(20);
+            doc.setFont("helvetica", "bold");
+            doc.text("CLÁUSULA 1 - OBJETO E PRAZO DE LOCAÇÃO", 15, y); y += 6;
+            doc.setFont("helvetica", "normal");
+            const clause1Text = `O presente contrato tem por objeto a locação de ${data.objeto_descricao}, pelo prazo de ${data.prazo_dias} dias, contados a partir de ${formatDate(data.data_inicio)} conforme acordado entre as partes.`;
+            splitText = doc.splitTextToSize(clause1Text, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 5;
 
-            doc.line(30, y, 90, y);
-            doc.text("Assinatura do Locador", 45, y + 5);
-            doc.line(120, y, 180, y);
-            doc.text("Assinatura do Locatário", 130, y + 5);
+            checkPageBreak(40);
+            doc.setFont("helvetica", "bold");
+            doc.text("CLÁUSULA 2 - VALOR E FORMA DE PAGAMENTO", 15, y); y += 6;
+            doc.setFont("helvetica", "normal");
+            const saldo = (parseFloat(data.valor_total) - parseFloat(data.valor_sinal || 0)).toFixed(2);
+            const clause2Text = `O valor total da locação é de R$ ${parseFloat(data.valor_total).toFixed(2)} pelo período contratado de ${data.prazo_dias} dias. O pagamento será feito da seguinte forma:\n- Sinal no valor de R$ ${parseFloat(data.valor_sinal || 0).toFixed(2)} pago no ato da reserva;\n- Saldo de R$ ${saldo} a ser quitado no ato da entrega da poltrona, por meio de dinheiro, PIX ou cartão (crédito ou débito no crédito sujeito a acréscimo de juros da operadora em até 12x).\nO valor do frete é de R$ ${parseFloat(data.valor_frete).toFixed(2)}, pago juntamente com o saldo da locação.`;
+            splitText = doc.splitTextToSize(clause2Text, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`Parágrafo 1°: Caso o(a) LOCATÁRIO(A) deseje prorrogar o prazo de locação, deverá consultar previamente a disponibilidade junto à LOCADORA. Sendo possível a prorrogação, o valor da diária extra será de R$ ${parseFloat(data.valor_diaria_extra).toFixed(2)} por dia.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`Parágrafo 2°: Em caso de devolução antecipada da poltrona, não haverá devolução nem reembolso dos valores pagos.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 5;
+            
+            checkPageBreak(35);
+            doc.setFont("helvetica", "bold");
+            doc.text("CLÁUSULA 3 - MULTAS CONTRATUAIS", 15, y); y += 6;
+            doc.setFont("helvetica", "normal");
+            splitText = doc.splitTextToSize(`Parágrafo 1°: Em caso de não devolução da poltrona no prazo estipulado, será aplicada multa de R$100,00 (cem reais) por dia de atraso.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`Parágrafo 2°: O(a) LOCATÁRIO(A) será responsável por qualquer dano causado ao bem locado. A multa compensatória será de R$250,00 (duzentos e cinquenta reais) por item danificado, ou de R$5.000,00 (cinco mil reais) caso seja necessária a substituição integral da poltrona.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`Parágrafo 3º: A não devolução da poltrona após 05 (cinco) dias do vencimento do contrato acarretará multa de R$5.000,00 (cinco mil reais), além das diárias de atraso.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 5;
 
-            doc.save(`Contrato_${contract.customers.name.replace(/\s/g, '_')}_${contract.id}.pdf`);
+            checkPageBreak(45);
+            doc.setFont("helvetica", "bold");
+            doc.text("CLÁUSULA 4 - RESPONSABILIDADE PELOS DANOS", 15, y); y += 6;
+            doc.setFont("helvetica", "normal");
+            splitText = doc.splitTextToSize(`O(a) LOCATÁRIO(A) compromete-se a zelar pela poltrona, utilizando-a com todo o cuidado necessário. Em caso de danos, o(a) LOCATÁRIO(A) responderá pelos custos de reparo ou, se irreparável, pelo valor de reposição da poltrona, conforme avaliação da LOCADORA.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`Ao final do contrato, a poltrona deverá ser devolvida nas mesmas condições de limpeza e conservação em que foi entregue. É obrigatório o uso da capa protetora, sob pena de cobrança pelos custos de limpeza, reparo e eventuais perdas e danos.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`Parágrafo único: A LOCADORA se compromete a realizar o reparo ou a substituição da poltrona objeto da locação com a máxima urgência, caso seja identificado qualquer problema em seu mecanismo.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 5;
+
+            checkPageBreak(30);
+            doc.setFont("helvetica", "bold");
+            doc.text("CLÁUSULA 5 - RESCISÃO CONTRATUAL", 15, y); y += 6;
+            doc.setFont("helvetica", "normal");
+            splitText = doc.splitTextToSize(`Em caso de desistência por parte do(a) LOCATÁRIO(A), este deverá comunicar à LOCADORA com, no mínimo, 15 (quinze) dias de antecedência, arcando com multa rescisória no valor correspondente ao sinal pago.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`A LOCADORA poderá rescindir este contrato, de forma imediata, caso haja descumprimento de qualquer cláusula, sem prejuízo da cobrança dos valores devidos até a data da rescisão.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 5;
+
+            checkPageBreak(40);
+            doc.setFont("helvetica", "bold");
+            doc.text("CLÁUSULA 6 - DISPOSIÇÕES GERAIS", 15, y); y += 6;
+            doc.setFont("helvetica", "normal");
+            splitText = doc.splitTextToSize(`6.1. O(a) LOCATÁRIO(A) não poderá sublocar, ceder ou transferir, total ou parcialmente, os direitos sobre o objeto deste contrato sem a prévia autorização da LOCADORA.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`6.2. Qualquer alteração neste contrato só terá validade se feita por escrito e assinada por ambas as partes.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 2;
+            splitText = doc.splitTextToSize(`6.3. As partes elegem o foro da Comarca de Niterói/RJ, para dirimir quaisquer dúvidas ou litígios oriundos deste contrato, renunciando a qualquer outro, por mais privilegiado que seja.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 8;
+            
+            checkPageBreak(15);
+            splitText = doc.splitTextToSize(`E, por estarem assim justos e contratados, firmam o presente instrumento, em via de igual teor e forma, para que produza seus legais e jurídicos efeitos.`, 180);
+            doc.text(splitText, 15, y);
+            y += (splitText.length * 5) + 10;
+            
+            checkPageBreak(30);
+            const today = new Date();
+            doc.text(`Niterói, ${today.toLocaleDateString('pt-BR')}`, 105, y, {align: 'center'}); y += 15;
+            
+            doc.line(20, y, 95, y);
+            doc.text(data.locadora_nome, 57.5, y + 5, { align: 'center'});
+            doc.text("LOCADORA", 57.5, y + 10, { align: 'center'});
+            
+            doc.line(115, y, 190, y);
+            doc.text(data.locatario_nome, 152.5, y + 5, { align: 'center'});
+            doc.text("LOCATÁRIO(A)", 152.5, y + 10, { align: 'center'});
+
+            doc.save(`Contrato_${data.locatario_nome.replace(/\s/g, '_')}.pdf`);
         }
+
         
         async function fetchCashFlow() {
             const startDate = document.getElementById('filter-cashflow-start').value;
@@ -1526,7 +1825,7 @@
             modal.querySelector('.equipment-image').src = equipment.image_url || 'https://placehold.co/600x400/e2e8f0/cbd5e0?text=Sem+Imagem';
             modal.querySelector('.equipment-description').textContent = equipment.description || 'Nenhuma descrição.';
             modal.querySelector('.equipment-additional-info').textContent = equipment.additional_info || 'Nenhuma informação adicional.';
-            modal.querySelector('.equipment-price').textContent = formatCurrency(equipment.rental_price) + '/dia';
+            //modal.querySelector('.equipment-price').textContent = formatCurrency(equipment.rental_price) + '/dia';
             modal.querySelector('.equipment-acquisition-date').textContent = formatDate(equipment.acquisition_date);
             
             const editButton = modal.querySelector('.edit-button-modal');
@@ -1573,6 +1872,49 @@
             form.data_cirurgia.value = data.data_cirurgia || '';
             form.indicacao.value = data.indicacao || '';
             // --- FIM DA ADIÇÃO ---
+
+            // --- NEW DOCUMENT LOGIC ---
+            const comprovanteStatusDiv = document.getElementById('edit-customer-comprovante-status');
+            const documentoStatusDiv = document.getElementById('edit-customer-documento-status');
+
+            form.elements['new_comprovante_residencia'].value = '';
+            form.elements['new_documento_identidade'].value = '';
+
+            // Handle Comprovante
+            if (data.comprovante_residencia_url) {
+                const { data: urlData, error: urlError } = await supabaseClient
+                    .storage
+                    .from('documentos-clientes')
+                    .createSignedUrl(data.comprovante_residencia_url, 60); // URL valid for 60 seconds
+
+                if (urlError) {
+                    comprovanteStatusDiv.innerHTML = `<span class="text-red-500">Erro ao carregar link</span>`;
+                } else {
+                    const fileNameParts = data.comprovante_residencia_url.split('-');
+                    const fileName = fileNameParts[fileNameParts.length - 1];
+                    comprovanteStatusDiv.innerHTML = `<a href="${urlData.signedUrl}" target="_blank" download class="text-blue-600 hover:underline">Baixar: ${fileName}</a>`;
+                }
+            } else {
+                comprovanteStatusDiv.textContent = 'Nenhum arquivo enviado.';
+            }
+
+            // Handle Documento
+            if (data.documento_identidade_url) {
+                const { data: urlData, error: urlError } = await supabaseClient
+                    .storage
+                    .from('documentos-clientes')
+                    .createSignedUrl(data.documento_identidade_url, 60);
+
+                if (urlError) {
+                    documentoStatusDiv.innerHTML = `<span class="text-red-500">Erro ao carregar link</span>`;
+                } else {
+                    const fileNameParts = data.documento_identidade_url.split('-');
+                    const fileName = fileNameParts[fileNameParts.length - 1];
+                    documentoStatusDiv.innerHTML = `<a href="${urlData.signedUrl}" target="_blank" download class="text-blue-600 hover:underline">Baixar: ${fileName}</a>`;
+                }
+            } else {
+                documentoStatusDiv.textContent = 'Nenhum arquivo enviado.';
+            }
 
             openModal('edit-customer-modal');
         }
@@ -1654,7 +1996,7 @@
             form.new_return_date.value = correctedDate.toISOString().split('T')[0];
             form.new_return_date.min = correctedDate.toISOString().split('T')[0];
             
-            calculateExtendedTotalPrice();
+            //calculateExtendedTotalPrice();
             openModal('extend-rental-modal');
         }
 
@@ -1708,10 +2050,10 @@
                 if (new Date(returnDateInput.value) <= newStartDate) {
                    returnDateInput.value = nextDay.toISOString().split('T')[0];
                 }
-                calculateTotalPrice();
+                //calculateTotalPrice();
             };
 
-            calculateTotalPrice();
+            //calculateTotalPrice();
             openModal('new-rental-modal');
         }
 

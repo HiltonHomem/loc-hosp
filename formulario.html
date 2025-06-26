@@ -5,44 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pré-Cadastro de Cliente</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // --- CONFIGURAÇÃO SUPABASE ---
-    const SUPABASE_URL = 'https://dqzpmwzcpvibjjastcik.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxenBtd3pjcHZpYmpqYXN0Y2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwODk5NDQsImV4cCI6MjA2NTY2NTk0NH0.sQBEbatxPszUV1KRbV5f7hCO5FJTOesjBllglbjeOYM';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    async function enviarCadastro(e) {
-      e.preventDefault();
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const customerId = urlParams.get('customer_id');
-
-      if (!customerId) {
-        document.body.innerHTML = '<h1>Erro: Link de cadastro inválido ou expirado.</h1>';
-        return;
-      }
-
-      const formData = new FormData(e.target);
-      const campos = Object.fromEntries(formData.entries());
-      campos.situacao_cadastral = 'pendente';
-
-      const { error } = await supabaseClient
-        .from('customers')
-        .update(campos)
-        .eq('id', customerId);
-
-      if (error) {
-        console.error('Erro ao cadastrar cliente:', error);
-        return alert('Erro ao salvar as informações. Por favor, tente novamente.');
-      }
-
-      document.body.innerHTML = '<h1>Obrigado!</h1><p>Seu pré-cadastro foi realizado com sucesso. Entraremos em contato em breve.</p>';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('pre-cadastro').addEventListener('submit', enviarCadastro);
-    });
-  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -93,9 +55,15 @@
       cursor: pointer;
       font-size: 16px;
       width: 100%;
+      transition: background-color 0.3s, opacity 0.3s;
     }
     button:hover {
       background-color: #2f855a;
+    }
+    button:disabled {
+        background-color: #999;
+        cursor: not-allowed;
+        opacity: 0.7;
     }
   </style>
 </head>
@@ -119,8 +87,164 @@
         <label>Tipo de cirurgia: <input name="tipo_cirurgia" required /></label>
         <label>Data da cirurgia: <input type="date" name="data_cirurgia" required /></label>
         <label>Indicação (quem recomendou): <input name="indicacao" /></label>
+        
+        <label>Comprovante de residência (PDF ou imagem):
+          <input type="file" name="comprovante_residencia" accept=".pdf,.jpg,.jpeg,.png" required />
+        </label>
+
+        <label>Documento de identidade (RG ou CNH):
+          <input type="file" name="documento_identidade" accept=".pdf,.jpg,.jpeg,.png" required />
+        </label>
         <button type="submit">Enviar Cadastro</button>
       </form>
   </div>
+
+  <script>
+    // --- CONFIGURAÇÃO SUPABASE ---
+    const SUPABASE_URL = 'https://dqzpmwzcpvibjjastcik.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxenBtd3pjcHZpYmpqYXN0Y2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwODk5NDQsImV4cCI6MjA2NTY2NTk0NH0.sQBEbatxPszUV1KRbV5f7hCO5FJTOesjBllglbjeOYM';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    /**
+     * Handles the form submission for pre-registration.
+     * @param {Event} e - The form submission event.
+     */
+    async function enviarCadastro(e) {
+      e.preventDefault();
+
+      // Get customer ID from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customer_id');
+      if (!customerId) {
+        document.body.innerHTML = '<div class="container"><h1>Erro: Link de cadastro inválido ou expirado.</h1></div>';
+        return;
+      }
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const campos = Object.fromEntries(formData.entries());
+
+      // Get files from the form
+      const comprovanteFile = formData.get('comprovante_residencia');
+      const documentoFile = formData.get('documento_identidade');
+
+      /**
+       * Helper function to upload a single file to Supabase Storage.
+       * @param {string} nomeCampo - The name of the form field.
+       * @param {File} file - The file to be uploaded.
+       * @returns {Promise<string>} The path of the uploaded file.
+       */
+      async function uploadFile(nomeCampo, file) {
+
+        const safeFileName = file.name
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '_')
+          .replace(/[^a-zA-Z0-9_.-]/g, '');
+
+        const filePath = `clientes/${customerId}/${nomeCampo}-${Date.now()}-${safeFileName}`;
+
+        // 🧹 Apagar arquivos antigos do campo
+        const { data: listData, error: listError } = await supabaseClient
+          .storage
+          .from('documentos-clientes')
+          .list(`clientes/${customerId}`, { limit: 100 });
+
+        if (listError) {
+          console.warn('Erro ao listar arquivos antigos:', listError);
+        } else {
+          const arquivosParaExcluir = listData
+            .filter(item => item.name.startsWith(nomeCampo))
+            .map(item => `clientes/${customerId}/${item.name}`);
+
+          if (arquivosParaExcluir.length > 0) {
+            const { error: deleteError } = await supabaseClient
+              .storage
+              .from('documentos-clientes')
+              .remove(arquivosParaExcluir);
+
+            if (deleteError) {
+              console.warn(`Erro ao excluir arquivos antigos de ${nomeCampo}:`, deleteError);
+            }
+          }
+        }
+
+        // 📤 Enviar novo arquivo
+        const { data, error } = await supabaseClient
+          .storage
+          .from('documentos-clientes')
+          .upload(filePath, file, {
+            upsert: true,
+            cacheControl: '3600'
+          });
+
+        if (error) throw error;
+        return data.path;
+      }
+
+
+      const submitButton = form.querySelector('button[type="submit"]');
+
+      // Main logic to upload files and update the customer record
+      try {
+        // Provide visual feedback to the user that something is happening
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+
+        // Upload both files concurrently for better performance
+        const [comprovantePath, documentoPath] = await Promise.all([
+            uploadFile('comprovante_residencia', comprovanteFile),
+            uploadFile('documento_identidade', documentoFile)
+        ]);
+        
+        // Prepare data for the database update
+        campos.comprovante_residencia_url = comprovantePath;
+        campos.documento_identidade_url = documentoPath;
+        campos.situacao_cadastral = 'pendente'; // Update status to 'pending review'
+
+        // Remove file fields from the object to be saved in the 'customers' table,
+        // as we are now storing their URLs instead.
+        delete campos.comprovante_residencia;
+        delete campos.documento_identidade;
+
+        // Update the customer record in the database
+        const { error: updateError } = await supabaseClient
+          .from('customers')
+          .update(campos)
+          .eq('id', customerId);
+
+        if (updateError) {
+            // If the database update fails, throw an error to be caught below
+            throw updateError;
+        }
+
+        // Show a success message to the user
+        document.body.innerHTML = '<div class="container"><h1>Obrigado!</h1><p>Seus documentos foram enviados e o cadastro foi realizado com sucesso. Entraremos em contato em breve.</p></div>';
+      
+      } catch (err) {
+        console.error('Erro no processo de cadastro:', err);
+        // Re-enable the button on error and notify the user
+        submitButton.disabled = false;
+        submitButton.textContent = 'Enviar Cadastro';
+        alert('Ocorreu um erro ao enviar os arquivos ou salvar seus dados. Por favor, verifique os arquivos e tente novamente.');
+      }
+    }
+    
+    // Attach the event listener after the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('pre-cadastro');
+      if (form) {
+        form.addEventListener('submit', enviarCadastro);
+      } else {
+          console.error("Formulário com ID 'pre-cadastro' não encontrado.");
+      }
+
+      // Check for customer_id on page load to give early feedback
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.has('customer_id')) {
+           document.body.innerHTML = '<div class="container"><h1>Erro: Link de cadastro inválido ou expirado.</h1><p>Por favor, solicite um novo link.</p></div>';
+      }
+    });
+  </script>
 </body>
 </html>

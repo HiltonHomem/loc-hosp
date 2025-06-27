@@ -440,8 +440,43 @@
         </div>
 
 </div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
-    <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Contrato</h2><form id="edit-contract-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="edit-contract-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="edit-contract-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
-    <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
+    
+        <!-- MODAL DE EDIÇÃO DE CONTRATO - MODIFICADO -->
+    <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Editar Contrato</h2>
+            <form id="edit-contract-form" class="space-y-4">
+                <input type="hidden" name="rental_id">
+                <input type="hidden" name="daily_price">
+                <input type="hidden" name="start_date">
+                <div>
+                    <label class="block text-gray-700">Equipamento</label>
+                    <p id="edit-contract-equipment-name" class="text-lg font-semibold"></p>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Cliente</label>
+                    <select name="customer_id" id="edit-contract-customer" class="w-full px-3 py-2 border rounded-lg" required></select>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Devolução Prevista</label>
+                    <input type="date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Valor do Contrato (R$)</label>
+                    <input type="number" name="total_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Valor do Frete (R$)</label>
+                    <input type="number" name="freight" class="w-full px-3 py-2 border rounded-lg" step="0.01" required>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+            <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
     <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
      <div id="approve-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg">
@@ -1064,29 +1099,26 @@
             fetchCashFlow();
         }
 
+        // FUNÇÃO DE SUBMISSÃO DO CONTRATO - MODIFICADA
         async function handleEditContractSubmit(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
             const rentalId = formData.get('rental_id');
-            const customerId = formData.get('customer_id');
-            const expectedReturnDate = formData.get('expected_return_date');
-            
-            const { data: rentalData, error: fetchError } = await supabaseClient.from('rentals').select('rental_start_date,equipment(rental_price)').eq('id', rentalId).single();
-            if(fetchError) return showToast("Erro ao carregar dados do contrato", "error");
 
-            const startDate = new Date(rentalData.rental_start_date);
-            const newReturnDate = new Date(expectedReturnDate);
-            const dailyPrice = rentalData.equipment.rental_price;
-            const days = Math.ceil((newReturnDate - startDate) / (1000 * 60 * 60 * 24));
-            const newTotalPrice = days * dailyPrice;
+            const updateData = {
+                customer_id: formData.get('customer_id'),
+                expected_return_date: formData.get('expected_return_date'),
+                total_price: parseFloat(formData.get('total_price')),
+                freight: parseFloat(formData.get('freight')) || 0 // Tornar o frete opcional
+            };
+
+            if (isNaN(updateData.total_price) || isNaN(updateData.freight)) {
+                return showToast('Os valores de contrato e frete devem ser números válidos.', 'error');
+            }
 
             const { error } = await supabaseClient
                 .from('rentals')
-                .update({ 
-                    customer_id: customerId, 
-                    expected_return_date: expectedReturnDate,
-                    total_price: newTotalPrice
-                })
+                .update(updateData)
                 .eq('id', rentalId);
 
             if (error) {
@@ -1096,10 +1128,12 @@
             showToast('Contrato atualizado com sucesso!', 'success');
             e.target.reset();
             closeModal('edit-contract-modal');
-            fetchRentalHistory();
+            
+            // Recarrega os dados relevantes na tela
             fetchAvailability();
             fetchCustomers();
             fetchContracts();
+            fetchCashFlow();
         }
         
         async function handleExtendRentalSubmit(e) {

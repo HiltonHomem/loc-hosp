@@ -40,12 +40,22 @@
             transform: translateX(0);
         }
     </style>
-    <script>
-        // --- SCRIPT DE VERIFICAÇÃO DE LOGIN ---
-        // Verifica se o usuário está autenticado. Se não, redireciona para a página de login.
-        if (sessionStorage.getItem('isAuthenticated') !== 'true') {
+    <script type="module">
+        // --- SCRIPT DE VERIFICAÇÃO DE SESSÃO SUPABASE ---
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!session) {
             window.location.href = './login.html';
         }
+
+        // Adiciona o evento de logout ao botão
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = './login.html';
+        });
     </script>
 </head>
 <body class="bg-gray-100 md:flex">

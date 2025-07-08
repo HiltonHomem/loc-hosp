@@ -58,7 +58,7 @@
         });
     </script>
 </head>
-<body class="bg-gray-100 md:flex">
+<body class="bg-gray-100 md:flex min-h-screen">
 
     <aside id="sidebar" class="sidebar sidebar-closed md:sidebar-open bg-slate-800 text-white w-64 fixed inset-y-0 left-0 z-30 md:relative md:translate-x-0 shrink-0">
         <div class="p-6">
@@ -1185,14 +1185,50 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
+
             try {
-                const { error } = await supabaseClient.rpc('process_equipment_return', { 
-                    p_rental_id: parseInt(data.rental_id), 
-                    p_equipment_id: parseInt(data.equipment_id),
-                    p_actual_return_date: data.actual_return_date,
-                    p_additional_info: data.additional_info
-                });
-                if(error) throw error;
+                // 1. Fetch the rental to get the total_price
+                const { data: rental, error: rentalError } = await supabaseClient
+                    .from('rentals')
+                    .select('total_price')
+                    .eq('id', data.rental_id)
+                    .single();
+
+                if (rentalError) throw rentalError;
+
+                // 2. Update rental status and return date
+                const { error: updateRentalError } = await supabaseClient
+                    .from('rentals')
+                    .update({
+                        status: 'Concluída',
+                        actual_return_date: data.actual_return_date
+                    })
+                    .eq('id', data.rental_id);
+
+                if (updateRentalError) throw updateRentalError;
+
+                // 3. Update equipment status
+                const { error: updateEquipmentError } = await supabaseClient
+                    .from('equipment')
+                    .update({ status: 'Disponível' })
+                    .eq('id', data.equipment_id);
+
+                if (updateEquipmentError) throw updateEquipmentError;
+
+                // 4. Create cash flow entry with the correct description
+                const cashFlowData = {
+                    description: `Recebimento de Aluguel - ${data.equipment_name}`,
+                    amount: rental.total_price,
+                    type: 'Entrada',
+                    transaction_date: data.actual_return_date
+                };
+                
+                const { error: cashFlowError } = await supabaseClient
+                    .from('cash_flow')
+                    .insert(cashFlowData);
+
+                if (cashFlowError) throw cashFlowError;
+
                 showToast('Devolução registrada com sucesso!', 'success');
                 e.target.reset();
                 closeModal('return-modal');
@@ -1202,6 +1238,7 @@
                 fetchContracts();
             } catch (error) {
                 showToast('Falha ao registrar devolução: ' + error.message, 'error');
+                console.error('Erro ao processar devolução:', error);
             }
         }
         
@@ -1396,7 +1433,7 @@
                                 </td>
                                 
                                 <td class="py-2 px-4 text-center">
-                                    <button class="text-blue-600 hover:underline text-sm" onclick="handleEquipmentCardClick(event)">Ver Detalhes</button>
+                                    <button class="text-blue-600 hover:underline text-sm">Ver Detalhes</button>
                                     <button data-id="${eq.id}" class="delete-equipment-button text-red-500 hover:text-red-700 p-1 ml-2">Excluir</button>
                                 </td>
                             </tr>`;

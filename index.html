@@ -568,9 +568,14 @@
             const pageSections = document.querySelectorAll('.page-section');
             const pageTitle = document.getElementById('page-title');
             const sidebar = document.getElementById('sidebar');
-            const menuButton = document.getElementById('menu-button');
-            
+            const menuButton = document.getElementById('menu-button');            
             const modals = document.querySelectorAll('.modal');
+
+            // --- CORREÇÃO MOBILE: Event listener para o botão de menu ---
+            menuButton.addEventListener('click', () => {
+                sidebar.classList.toggle('sidebar-closed');
+                sidebar.classList.toggle('sidebar-open');
+            });
 
             // --- Handlers para abrir modais ---
             document.getElementById('add-equipment-catalog-button').addEventListener('click', () => openModal('add-equipment-modal'));
@@ -674,7 +679,10 @@
                     if (targetId === 'contratos') fetchContracts();
                     if (targetId === 'fluxo-caixa') fetchCashFlow();
                     
-                    if (window.innerWidth < 768) sidebar.classList.add('sidebar-closed');
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.add('sidebar-closed');
+                        sidebar.classList.remove('sidebar-open');
+                    }
                 });
             });
 

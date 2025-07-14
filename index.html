@@ -213,7 +213,7 @@
                             <input type="search" id="availability-search" placeholder="Buscar por equipamento..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
                         </div>
                     </div>
-                     <div class="flex items-center gap-2 mb-4" id="availability-status-filters">
+                     <div class="flex flex-wrap items-center gap-2 mb-4" id="availability-status-filters">
                         <span class="font-medium text-gray-700">Status:</span>
                         <button class="filter-btn active-filter" data-status="Todos">Todos</button>
                         <button class="filter-btn" data-status="Disponível">Disponível</button>
@@ -441,17 +441,20 @@
 
 </div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
     
-        <!-- MODAL DE EDIÇÃO DE CONTRATO - MODIFICADO -->
+    <!-- MODAL DE EDIÇÃO DE CONTRATO - MODIFICADO -->
     <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
             <h2 class="text-2xl font-bold mb-6">Editar Contrato</h2>
             <form id="edit-contract-form" class="space-y-4">
                 <input type="hidden" name="rental_id">
-                <input type="hidden" name="daily_price">
+                <input type="hidden" name="original_equipment_id">
                 <input type="hidden" name="start_date">
+                
                 <div>
-                    <label class="block text-gray-700">Equipamento</label>
-                    <p id="edit-contract-equipment-name" class="text-lg font-semibold"></p>
+                    <label for="edit-contract-equipment" class="block text-gray-700">Equipamento</label>
+                    <select name="equipment_id" id="edit-contract-equipment" class="w-full px-3 py-2 border rounded-lg" required>
+                        <!-- Options will be populated by JS -->
+                    </select>
                 </div>
                 <div>
                     <label class="block text-gray-700">Cliente</label>
@@ -1112,16 +1115,38 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const rentalId = formData.get('rental_id');
+            const originalEquipmentId = formData.get('original_equipment_id');
+            const newEquipmentId = formData.get('equipment_id');
+            const customerId = formData.get('customer_id');
 
             const updateData = {
-                customer_id: formData.get('customer_id'),
+                equipment_id: newEquipmentId,
+                customer_id: customerId,
                 expected_return_date: formData.get('expected_return_date'),
                 total_price: parseFloat(formData.get('total_price')),
-                freight: parseFloat(formData.get('freight')) || 0 // Tornar o frete opcional
+                freight: parseFloat(formData.get('freight')) || 0
             };
 
             if (isNaN(updateData.total_price) || isNaN(updateData.freight)) {
                 return showToast('Os valores de contrato e frete devem ser números válidos.', 'error');
+            }
+
+            // Log the change if equipment is different
+            if (originalEquipmentId && newEquipmentId && originalEquipmentId !== newEquipmentId) {
+                const logData = {
+                    rental_id: rentalId,
+                    customer_id: customerId,
+                    original_equipment_id: originalEquipmentId,
+                    new_equipment_id: newEquipmentId
+                };
+                const { error: logError } = await supabaseClient.from('equipment_change_log').insert(logData);
+                if (logError) {
+                    // We can either stop the process or just warn the user
+                    console.error('Failed to log equipment change:', logError);
+                    showToast('Aviso: Falha ao registrar a troca do equipamento no histórico.', 'error');
+                } else {
+                    showToast('Troca de equipamento registrada no histórico.', 'info');
+                }
             }
 
             const { error } = await supabaseClient
@@ -1580,12 +1605,7 @@
                     <td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${contract.status}</span></td>
                     <td class="py-2 px-4 text-right">${formatCurrency(contract.total_price)}</td>
                     <td class="py-2 px-4 text-center">
-                         <button data-rental-id="${contract.id}" 
-                                 data-customer-id="${contract.customers?.id || ''}"
-                                 data-start-date="${contract.rental_start_date}"
-                                 data-daily-price="${contract.equipment.rental_price}"
-                                 data-equipment-name="${contract.equipment?.name || 'N/A'}"
-                                 data-return-date="${contract.expected_return_date}"
+                         <button data-rental='${JSON.stringify(contract)}'
                                  class="edit-contract-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
                         <button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2"
                                 data-rental-id="${contract.id}"
@@ -2063,27 +2083,66 @@
 
 
         async function handleEditContractClick(e) {
-            const { rentalId, customerId, equipmentName, returnDate, dailyPrice, startDate } = e.currentTarget.dataset;
+            const contractData = JSON.parse(e.currentTarget.dataset.rental);
+            const { id: rentalId, rental_start_date, expected_return_date, equipment, customers: customer } = contractData;
 
             const form = document.getElementById('edit-contract-form');
+            form.reset(); // Clear previous data
+
             form.rental_id.value = rentalId;
-            form.daily_price.value = dailyPrice;
-            form.start_date.value = startDate;
+            form.original_equipment_id.value = equipment.id;
+            form.start_date.value = rental_start_date;
 
-            document.getElementById('edit-contract-equipment-name').textContent = equipmentName;
-            
-            const date = new Date(returnDate);
-            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-            const correctedDate = new Date(date.getTime() + userTimezoneOffset);
-            form.expected_return_date.value = correctedDate.toISOString().split('T')[0];
-            form.expected_return_date.min = form.expected_return_date.value;
+            // Preencher campos de valor e data
+            form.total_price.value = contractData.total_price || 0;
+            form.freight.value = contractData.freight || 0;
+            const returnDate = new Date(expected_return_date);
+            returnDate.setMinutes(returnDate.getMinutes() + returnDate.getTimezoneOffset());
+            form.expected_return_date.value = returnDate.toISOString().split('T')[0];
 
-
-            const { data: customers, error } = await supabaseClient.from('customers').select('id, name').order('name');
-            if(error) return showToast("Erro ao buscar clientes.", 'error');
-
+            // Popular select de clientes
             const customerSelect = document.getElementById('edit-contract-customer');
-            customerSelect.innerHTML = customers.map(c => `<option value="${c.id}" ${c.id == customerId ? 'selected' : ''}>${c.name}</option>`).join('') || '<option>Cadastre um cliente</option>';
+            const { data: customers, error: customerError } = await supabaseClient.from('customers').select('id, name').order('name');
+            if (customerError) return showToast("Erro ao buscar clientes.", 'error');
+            customerSelect.innerHTML = customers.map(c => `<option value="${c.id}" ${c.id == customer.id ? 'selected' : ''}>${c.name}</option>`).join('');
+
+            // Popular select de equipamentos
+            const equipmentSelect = document.getElementById('edit-contract-equipment');
+            equipmentSelect.innerHTML = `<option value="">Carregando equipamentos...</option>`;
+
+            // Buscar equipamentos disponíveis para o período do contrato
+            const { data: unavailableRentals, error: rentalError } = await supabaseClient
+                .from('rentals')
+                .select('equipment_id')
+                .or(`status.eq.Ativa,status.eq.Agendado`)
+                .neq('id', rentalId) // Excluir o próprio contrato da verificação
+                .lte('rental_start_date', expected_return_date)
+                .gte('expected_return_date', rental_start_date);
+
+            if (rentalError) return showToast('Erro ao verificar disponibilidade de equipamentos.', 'error');
+            
+            const unavailableIds = unavailableRentals.map(r => r.equipment_id);
+            
+            let equipmentQuery = supabaseClient.from('equipment').select('id, name').not('status', 'eq', 'Em Reparo');
+
+            if (unavailableIds.length > 0) {
+                equipmentQuery = equipmentQuery.not('id', 'in', `(${unavailableIds.join(',')})`);
+            }
+            
+            const { data: availableEquipment, error: equipmentError } = await equipmentQuery;
+
+            if (equipmentError) return showToast('Erro ao buscar equipamentos disponíveis.', 'error');
+
+            // Adicionar o equipamento atual à lista, caso não esteja nela
+            const isCurrentEquipmentInList = availableEquipment.some(eq => eq.id === equipment.id);
+            if (!isCurrentEquipmentInList) {
+                availableEquipment.push({ id: equipment.id, name: equipment.name });
+            }
+            
+            equipmentSelect.innerHTML = availableEquipment
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(eq => `<option value="${eq.id}" ${eq.id == equipment.id ? 'selected' : ''}>${eq.name}</option>`)
+                .join('');
             
             openModal('edit-contract-modal');
         }

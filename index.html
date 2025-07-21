@@ -40,23 +40,6 @@
             transform: translateX(0);
         }
     </style>
-    <script type="module">
-        // --- SCRIPT DE VERIFICAÇÃO DE SESSÃO SUPABASE ---
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-        const { data: { session } } = await supabase.auth.getSession();
-
-        if (!session) {
-            window.location.href = './login.html';
-        }
-
-        // Adiciona o evento de logout ao botão
-        document.getElementById('logout-button').addEventListener('click', async () => {
-            await supabase.auth.signOut();
-            window.location.href = './login.html';
-        });
-    </script>
 </head>
 <body class="bg-gray-100 md:flex min-h-screen">
 
@@ -293,7 +276,15 @@
                             <input type="search" id="contracts-search" placeholder="Buscar cliente/equipamento..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
                         </div>
                     </div>
-                    <div class="overflow-x-auto mt-4">
+                    <!-- NEW FILTER BAR -->
+                    <div class="flex flex-wrap items-center gap-4 border-t pt-4 mb-4" id="contracts-status-filters">
+                        <span class="font-medium text-gray-700">Status:</span>
+                        <button class="filter-btn active-filter" data-status="Todos">Todos</button>
+                        <button class="filter-btn" data-status="Ativa">Ativos</button>
+                        <button class="filter-btn" data-status="Agendado">Agendados</button>
+                        <button class="filter-btn" data-status="Atrasado">Atrasados</button>
+                    </div>
+                    <div class="overflow-x-auto">
                         <table class="min-w-full bg-white">
                             <thead class="bg-gray-200">
                                 <tr>
@@ -466,20 +457,47 @@
           </div>
         </form>
       </div>
-    </div>    <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Nova Locação</h2><form id="new-rental-form" class="space-y-4"><input type="hidden" name="equipment_id"><input type="hidden" name="rental_price"><div><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div><div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div><div><label class="block text-gray-700">Início da Locação</label><input type="date" id="rental-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto (R$)</label><input type="number" id="rental-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t">
-        <div>
-        <label class="block text-gray-700">Novo Valor da Locação (R$)</label>
-        <input type="number" name="total_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required>
+    </div>    
+    <div id="new-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Nova Locação</h2>
+            <form id="new-rental-form" class="space-y-4">
+                <input type="hidden" name="equipment_id">
+                <input type="hidden" name="rental_price">
+                <div><label class="block text-gray-700">Equipamento</label><p id="rental-equipment-name" class="text-lg font-semibold"></p></div>
+                <div><label class="block text-gray-700">Cliente</label><select name="customer_id" id="rental-customer" class="w-full px-3 py-2 border rounded-lg" required></select></div>
+                <div><label class="block text-gray-700">Início da Locação</label><input type="date" id="rental-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg" required></div>
+                <div><label class="block text-gray-700">Devolução Prevista</label><input type="date" id="rental-return-date" name="expected_return_date" class="w-full px-3 py-2 border rounded-lg" required></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700">Sinal (R$)</label>
+                        <input type="number" name="deposit" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Desconto (R$)</label>
+                        <input type="number" id="rental-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t">
+                    <div>
+                        <label class="block text-gray-700">Valor da Locação (R$)</label>
+                        <input type="number" name="total_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Valor do Frete (R$)</label>
+                        <input type="number" name="freight" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="mt-4 text-right">
+                        <p class="text-lg font-semibold text-gray-800">Valor Total: <span id="calculated-total" class="text-blue-600">R$ 0,00</span></p>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button>
+                </div>
+            </form>
         </div>
-        <div>
-        <label class="block text-gray-700">Valor do Frete (R$)</label>
-        <input type="number" name="freight" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00">
-        </div>
-        <div class="mt-4 text-right">
-        <p class="text-lg font-semibold text-gray-800">Valor Total: <span id="calculated-total" class="text-blue-600">R$ 0,00</span></p>
-        </div>
-
-</div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar</button></div></form></div></div>
+    </div>
     
     <!-- MODAL DE EDIÇÃO DE CONTRATO - MODIFICADO -->
     <div id="edit-contract-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
@@ -590,22 +608,31 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-3 overflow-hidden"></div>
 
-    <script>
-        // --- CONFIGURAÇÃO SUPABASE ---
+    <script type="module">
+        // --- CONFIGURAÇÃO E LÓGICA DO SUPABASE ---
+        const { createClient } = supabase;
         const SUPABASE_URL = 'https://dqzpmwzcpvibjjastcik.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxenBtd3pjcHZpYmpqYXN0Y2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwODk5NDQsImV4cCI6MjA2NTY2NTk0NH0.sQBEbatxPszUV1KRbV5f7hCO5FJTOesjBllglbjeOYM';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // --- VERIFICAÇÃO DE SESSÃO ---
+        (async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = './login.html';
+            }
+        })();
         
         let lastFetchedEquipments = [];
         let currentCatalogView = 'grid';
 
          // --- LÓGICA DE LOGOUT ---
-        document.getElementById('logout-button').addEventListener('click', () => {
-            sessionStorage.removeItem('isAuthenticated');
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
             window.location.href = './login.html';
         });
 
-        // --- UI Logic ---
+        // --- Lógica da UI ---
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('.nav-link');
             const pageSections = document.querySelectorAll('.page-section');
@@ -643,7 +670,7 @@
             document.getElementById('availability-search').addEventListener('input', (e) => fetchAvailability(e.target.value));
             document.getElementById('customers-search').addEventListener('input', (e) => fetchCustomers(e.target.value));
             document.getElementById('contracts-search').addEventListener('input', () => fetchContracts());
-            document.getElementById('cashflow-search').addEventListener('input', () => fetchCashFlow());
+            document.getElementById('cashflow-search').addEventListener('input', (e) => fetchCashFlow(e.target.value));
             
             // Sorting
             document.getElementById('history-sort').addEventListener('change', () => fetchRentalHistory());
@@ -680,6 +707,13 @@
                 btn.classList.add('active-filter');
                 fetchCustomers();
             }));
+
+            // NEW: Event listeners for contract status filters
+            document.querySelectorAll('#contracts-status-filters .filter-btn').forEach(btn => btn.addEventListener('click', () => {
+                document.querySelectorAll('#contracts-status-filters .filter-btn').forEach(b => b.classList.remove('active-filter'));
+                btn.classList.add('active-filter');
+                fetchContracts();
+            }));
             
             // Catalog View Switcher
             document.getElementById('grid-view-btn').addEventListener('click', () => switchCatalogView('grid'));
@@ -695,7 +729,8 @@
             document.getElementById('add-expense-form').addEventListener('submit', handleNewExpenseSubmit);
             document.getElementById('extend-rental-form').addEventListener('submit', handleExtendRentalSubmit);
             document.getElementById('return-form').addEventListener('submit', handleReturnSubmit);
-            document.getElementById('pdf-preview-form').addEventListener('submit', handleGeneratePdfFromForm); // Listener para novo form
+            document.getElementById('pdf-preview-form').addEventListener('submit', handleGeneratePdfFromForm);
+            
             // Catalog Status Filters
             document.querySelectorAll('#catalog-filters .filter-btn').forEach(btn => {
                 btn.addEventListener('click', (event) => {
@@ -730,20 +765,24 @@
             //sistema de frete
              const rentalInput = document.querySelector('input[name="total_price"]');
             const freightInput = document.querySelector('input[name="freight"]');
-            const discountInput = document.querySelector('rental-discount');
+            const discountInput = document.getElementById('rental-discount');
+            const depositInput = document.querySelector('input[name="deposit"]');
+
 
             if (rentalInput) rentalInput.addEventListener('input', updateCalculatedTotal);
             if (freightInput) freightInput.addEventListener('input', updateCalculatedTotal);
             if (discountInput) discountInput.addEventListener('input', updateCalculatedTotal);
+            if (depositInput) depositInput.addEventListener('input', updateCalculatedTotal);
+
 
             switchCatalogView('list'); // Iniciar na visualização de lista
             fetchEquipments(); // Start on catalog view
         });
 
         function updateCalculatedTotal() {
-            const rentalInput = document.querySelector('input[name="total_price"]');
-            const freightInput = document.querySelector('input[name="freight"]');
-            const discountInput = document.querySelector('rental-discount');
+            const rentalInput = document.querySelector('#new-rental-form input[name="total_price"]');
+            const freightInput = document.querySelector('#new-rental-form input[name="freight"]');
+            const discountInput = document.getElementById('rental-discount');
 
             const rentalValue = parseFloat(rentalInput?.value) || 0;
             const freightValue = parseFloat(freightInput?.value) || 0;
@@ -784,7 +823,7 @@
             fetchEquipments(activeFilter === 'Todos' ? null : activeFilter, searchTerm);
         }
 
-        // --- Util Functions ---
+        // --- Funções Utilitárias ---
         const openModal = (modalId) => document.getElementById(modalId).classList.remove('hidden');
         const closeModal = (modalId) => document.getElementById(modalId).classList.add('hidden');
         const formatCurrency = (value) => (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -821,7 +860,7 @@
             showToast('Link copiado para a área de transferência!', 'success');
         }
 
-        // --- Core Logic ---
+        // --- Lógica Principal ---
         async function handleGenerateCustomerLink() {
             // 1. Create a placeholder customer record with a temporary name
             const { data, error } = await supabaseClient
@@ -1025,6 +1064,7 @@
             const startDate = new Date(formData.get('rental_start_date') + "T00:00:00");
             const returnDate = new Date(formData.get('expected_return_date') + "T00:00:00");
             const discount = parseFloat(formData.get('discount')) || 0;
+            const deposit = parseFloat(formData.get('deposit')) || 0;
             const totalPrice = parseFloat(formData.get('total_price'));
             const freight = parseFloat(formData.get('freight')) || 0;
 
@@ -1047,7 +1087,8 @@
                 expected_return_date: returnDate.toISOString(),
                 total_price: totalPrice + freight,
                 status: status,
-                freight: freight
+                freight: freight,
+                deposit: deposit
             };
             
             const { data: conflictingRentals, error: conflictError } = await supabaseClient
@@ -1065,22 +1106,23 @@
                 return showToast('Este equipamento já está reservado para o período selecionado.', 'error');
             }
 
-            // --- BUG FIX STARTS HERE ---
             if (isFutureRental) {
-                // For future rentals, just insert the record. The availability check prevents double booking.
                 const { error } = await supabaseClient.from('rentals').insert([rentalData]);
                 if (error) {
                     console.error('Falha ao agendar locação:', error);
                     return showToast('Falha ao agendar locação: ' + error.message, 'error');
                 }
             } else {
-                // For immediate rentals, call the RPC which also updates equipment status.
+                // NOTE: The RPC function 'create_rental_and_update_equipment' in Supabase
+                // must be updated to accept 'p_deposit' and 'p_freight' parameters.
                 const { error: rpcError } = await supabaseClient.rpc('create_rental_and_update_equipment', { 
                     p_equipment_id: parseInt(rentalData.equipment_id), 
                     p_customer_id: parseInt(rentalData.customer_id), 
                     p_rental_start_date: rentalData.rental_start_date, 
                     p_expected_return_date: rentalData.expected_return_date, 
-                    p_total_price: rentalData.total_price 
+                    p_total_price: rentalData.total_price,
+                    p_deposit: rentalData.deposit,
+                    p_freight: rentalData.freight
                 });
                 
                 if (rpcError) {
@@ -1088,7 +1130,6 @@
                     return showToast('Falha na locação: ' + rpcError.message, 'error');
                 }
             }
-            // --- BUG FIX ENDS HERE ---
 
             showToast('Locação registrada com sucesso!', 'success');
             e.target.reset();
@@ -1559,12 +1600,14 @@
         }
 
         async function fetchContracts() {
-            const searchTerm = document.getElementById('contracts-search').value;
+            const searchTerm = document.getElementById('contracts-search').value.toLowerCase();
             const sortValue = document.getElementById('contracts-sort').value.split('-');
             const isCustomerSort = sortValue[0].includes('customers.name');
             const sortColumn = isCustomerSort ? 'name' : sortValue[0];
             const sortAscending = sortValue[1] === 'asc';
+            const statusFilter = document.querySelector('#contracts-status-filters .active-filter').dataset.status;
 
+            // A query base busca todos os contratos que não estão 'Concluídos'
             let query = supabaseClient
                 .from('rentals')
                 .select(`
@@ -1577,12 +1620,9 @@
                     equipment!inner(id, name, rental_price),
                     customers!inner(id, name, nacionalidade, estado_civil, profissao, cpf, rg, endereco_completo)
                 `)
-                .or('status.eq.Ativa,status.eq.Agendado');
+                .in('status', ['Ativa', 'Agendado']);
 
-            if (searchTerm) {
-                query = query.or(`equipment.name.ilike.%${searchTerm}%,customers.name.ilike.%${searchTerm}%`);
-            }
-            
+            // Aplica a ordenação
             if (isCustomerSort) {
                 query = query.order(sortColumn, { foreignTable: 'customers', ascending: sortAscending });
             } else {
@@ -1596,21 +1636,39 @@
                 return showToast('Erro ao buscar contratos: ' + error.message, 'error');
             }
 
-            const tableBody = document.getElementById('contracts-table-body');
-            if (data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500">Nenhum contrato ativo ou agendado no momento.</td></tr>`;
-                return;
-            }
-            
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            tableBody.innerHTML = data.map(contract => {
-                let currentStatus = contract.status;
-                if (currentStatus === 'Ativa' && new Date(contract.expected_return_date) < today) {
-                    currentStatus = 'Atrasado';
+            // 1. Deriva o status (Ativa, Agendado, Atrasado) para cada contrato
+            let allContracts = data.map(contract => {
+                let derivedStatus = contract.status;
+                if (derivedStatus === 'Ativa' && new Date(contract.expected_return_date) < today) {
+                    derivedStatus = 'Atrasado';
                 }
+                return { ...contract, derivedStatus };
+            });
 
+            // 2. Filtra por status (se não for 'Todos')
+            const statusFilteredData = statusFilter === 'Todos'
+                ? allContracts
+                : allContracts.filter(c => c.derivedStatus === statusFilter);
+            
+            // 3. Filtra pelo termo de busca
+            const finalFilteredData = searchTerm
+                ? statusFilteredData.filter(item =>
+                    item.equipment.name?.toLowerCase().includes(searchTerm) ||
+                    item.customers.name?.toLowerCase().includes(searchTerm)
+                )
+                : statusFilteredData;
+
+            const tableBody = document.getElementById('contracts-table-body');
+            if (finalFilteredData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500">Nenhum contrato encontrado para os filtros aplicados.</td></tr>`;
+                return;
+            }
+            
+            tableBody.innerHTML = finalFilteredData.map(contract => {
+                const currentStatus = contract.derivedStatus; // Usa o status derivado para exibição
                 const statusColors = {
                     'Ativa': 'bg-yellow-100 text-yellow-800',
                     'Agendado': 'bg-blue-100 text-blue-800',
@@ -1621,7 +1679,7 @@
                 let actionsHtml = `<button data-rental='${JSON.stringify(contract)}' class="edit-contract-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
                                    <button class="generate-pdf-button bg-gray-500 text-white px-3 py-1 rounded text-sm ml-2" data-contract='${JSON.stringify(contract)}'>PDF</button>`;
 
-                if (contract.status === 'Ativa') { // Atrasado é um status derivado de Ativa, então as ações são as mesmas
+                if (currentStatus === 'Ativa' || currentStatus === 'Atrasado') {
                     actionsHtml += `<button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2"
                                         data-rental-id="${contract.id}"
                                         data-equipment-id="${contract.equipment.id}"
@@ -1629,7 +1687,7 @@
                                         data-start-date="${contract.rental_start_date}"
                                         data-daily-price="${contract.equipment.rental_price}"
                                         data-original-return-date="${contract.expected_return_date}">Estender</button>`;
-                } else if (contract.status === 'Agendado') {
+                } else if (currentStatus === 'Agendado') {
                     actionsHtml += `<button data-rental-id="${contract.id}" class="cancel-contract-button bg-red-500 text-white px-3 py-1 rounded text-sm ml-2">Cancelar</button>`;
                 }
 
@@ -1642,8 +1700,9 @@
                     <td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${currentStatus}</span></td>
                     <td class="py-2 px-4 text-right">${formatCurrency(contract.total_price)}</td>
                     <td class="py-2 px-4 text-center">${actionsHtml}</td>
-                </tr>
-            `}).join('');
+                </tr>`;
+            }).join('');
+
             document.querySelectorAll('.edit-contract-button').forEach(btn => btn.addEventListener('click', handleEditContractClick));
             document.querySelectorAll('.extend-button').forEach(btn => btn.addEventListener('click', handleExtendClick));
             document.querySelectorAll('.generate-pdf-button').forEach(btn => btn.addEventListener('click', handleGeneratePDFClick));
@@ -1656,17 +1715,14 @@
             openModal('pdf-preview-modal');
         }
 
-        // NEW: This function populates the new modal with contract data
         function populatePdfPreviewForm(contract) {
             const form = document.getElementById('pdf-preview-form');
             const customer = contract.customers || {};
             
-            // Locadora (Landlord) - Fill with default or stored values
             form.elements['locadora_nome'].value = 'BIO POLTRONAS LOCAÇÕES NITERÓI-RJ LTDA';
-            form.elements['locadora_cnpj'].value = '61.053.004/0001-22'; // Example CNPJ
-            form.elements['locadora_endereco'].value = 'Itaipu, Niterói/RJ'; // Example Address
+            form.elements['locadora_cnpj'].value = '61.053.004/0001-22';
+            form.elements['locadora_endereco'].value = 'Itaipu, Niterói/RJ';
 
-            // Locatário (Tenant)
             form.elements['locatario_nome'].value = customer.name || '';
             form.elements['locatario_nacionalidade'].value = customer.nacionalidade || 'Brasileiro(a)';
             form.elements['locatario_estado_civil'].value = customer.estado_civil || '';
@@ -1675,14 +1731,11 @@
             form.elements['locatario_rg'].value = customer.rg || '';
             form.elements['locatario_endereco'].value = customer.endereco_completo || '';
 
-            // Object
             form.elements['objeto_descricao'].value = `01 (uma) Poltrona Elétrica Pós-Operatório, com mecanismo lift, reclínio automático, em corino bege, porta-copos na cor preta, controle com fio, fonte de energia nova e capa dupla face impermeável`;
 
-            // Dates and Duration
             const startDate = new Date(contract.rental_start_date);
             const endDate = new Date(contract.expected_return_date);
             
-            // Correct for timezone issues when displaying in input type="date"
             startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
             endDate.setMinutes(endDate.getMinutes() + endDate.getTimezoneOffset());
 
@@ -1691,14 +1744,12 @@
             const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
             form.elements['prazo_dias'].value = duration;
 
-            // Values
             form.elements['valor_total'].value = contract.total_price || 0.00;
             form.elements['valor_frete'].value = contract.freight || 0.00;
-            form.elements['valor_sinal'].value = ''; // You might need to add a "deposit" field to your rentals table
-            form.elements['valor_diaria_extra'].value = '80.00'; // Default value, can be changed
+            form.elements['valor_sinal'].value = '';
+            form.elements['valor_diaria_extra'].value = '80.00';
         }
 
-        // NEW: Handles the submission of the preview form and calls the PDF generation
         function handleGeneratePdfFromForm(e) {
             e.preventDefault();
             const formData = Object.fromEntries(new FormData(e.target).entries());
@@ -1706,7 +1757,6 @@
             closeModal('pdf-preview-modal');
         }
 
-        // REWRITTEN: Generates the PDF based on the preview form data, matching the new layout
         function generateContractPDF(data) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });

@@ -153,7 +153,7 @@
                     </div>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-                    <div class="flex flex-col md:flex-row justify-between gap-4 mb-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                         <div class="flex flex-wrap items-center gap-2" id="catalog-filters">
                              <span class="font-semibold text-gray-700">Status:</span>
                             <button class="filter-btn active-filter" data-status="Todos">Todos</button>
@@ -161,7 +161,18 @@
                             <button class="filter-btn" data-status="Alugado">Alugados</button>
                             <button class="filter-btn" data-status="Em Reparo">Em Manutenção</button>
                         </div>
-                        <input type="search" id="catalog-search" placeholder="Buscar por nome..." class="w-full md:w-1/3 px-3 py-2 border rounded-lg">
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <div class="flex items-center gap-2">
+                                <label for="catalog-sort" class="text-sm font-medium text-gray-700">Ordenar por:</label>
+                                <select id="catalog-sort" class="border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="name-asc">Nome (A-Z)</option>
+                                    <option value="name-desc">Nome (Z-A)</option>
+                                    <option value="acquisition_date-desc">Mais Recentes</option>
+                                    <option value="acquisition_date-asc">Mais Antigos</option>
+                                </select>
+                            </div>
+                            <input type="search" id="catalog-search" placeholder="Buscar por nome..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
+                        </div>
                     </div>
                      <div class="border-t pt-4">
                         <div class="flex flex-wrap items-center gap-4">
@@ -266,8 +277,23 @@
             
             <section id="contratos" class="page-section hidden">
                  <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">Contratos Ativos e Agendados</h3>
-                    <div class="overflow-x-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                        <h3 class="text-lg font-semibold">Contratos Ativos e Agendados</h3>
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <div class="flex items-center gap-2">
+                                <label for="contracts-sort" class="text-sm font-medium text-gray-700">Ordenar por:</label>
+                                <select id="contracts-sort" class="border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="expected_return_date-asc">Devolução Próxima</option>
+                                    <option value="rental_start_date-desc">Início Recente</option>
+                                    <option value="total_price-desc">Maior Valor</option>
+                                    <option value="customers.name-asc">Cliente (A-Z)</option>
+                                    <option value="customers.name-desc">Cliente (Z-A)</option>
+                                </select>
+                            </div>
+                            <input type="search" id="contracts-search" placeholder="Buscar cliente/equipamento..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto mt-4">
                         <table class="min-w-full bg-white">
                             <thead class="bg-gray-200">
                                 <tr>
@@ -302,24 +328,38 @@
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Histórico de Transações</h3>
                         <button id="add-expense-button" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700">Adicionar Despesa</button>
                     </div>
-                     <div class="flex flex-wrap items-center gap-x-6 gap-y-4 border-b pb-4 mb-4">
-                        <div class="flex items-center gap-2" id="cashflow-type-filters">
-                             <span class="font-medium text-gray-700">Tipo:</span>
-                            <button class="filter-btn active-filter" data-type="Todos">Todos</button>
-                            <button class="filter-btn" data-type="Entrada">Entradas</button>
-                            <button class="filter-btn" data-type="Saída">Saídas</button>
+                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4 mb-4">
+                        <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+                            <div class="flex items-center gap-2" id="cashflow-type-filters">
+                                <span class="font-medium text-gray-700">Tipo:</span>
+                                <button class="filter-btn active-filter" data-type="Todos">Todos</button>
+                                <button class="filter-btn" data-type="Entrada">Entradas</button>
+                                <button class="filter-btn" data-type="Saída">Saídas</button>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="filter-cashflow-start" class="text-sm text-gray-600">De:</label>
+                                <input type="date" id="filter-cashflow-start" class="border rounded-lg px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="filter-cashflow-end" class="text-sm text-gray-600">Até:</label>
+                                <input type="date" id="filter-cashflow-end" class="border rounded-lg px-2 py-1 text-sm">
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <label for="filter-cashflow-start" class="text-sm text-gray-600">De:</label>
-                            <input type="date" id="filter-cashflow-start" class="border rounded-lg px-2 py-1 text-sm">
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <label for="filter-cashflow-end" class="text-sm text-gray-600">Até:</label>
-                            <input type="date" id="filter-cashflow-end" class="border rounded-lg px-2 py-1 text-sm">
+                        <div class="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
+                            <div class="flex items-center gap-2">
+                                <label for="cashflow-sort" class="text-sm font-medium text-gray-700">Ordenar por:</label>
+                                <select id="cashflow-sort" class="border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="transaction_date-desc">Mais Recentes</option>
+                                    <option value="transaction_date-asc">Mais Antigos</option>
+                                    <option value="amount-desc">Maior Valor</option>
+                                    <option value="amount-asc">Menor Valor</option>
+                                </select>
+                            </div>
+                            <input type="search" id="cashflow-search" placeholder="Buscar por descrição..." class="w-full md:w-auto px-3 py-2 border rounded-lg">
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -602,11 +642,16 @@
             document.getElementById('catalog-search').addEventListener('input', triggerCatalogFetch);
             document.getElementById('availability-search').addEventListener('input', (e) => fetchAvailability(e.target.value));
             document.getElementById('customers-search').addEventListener('input', (e) => fetchCustomers(e.target.value));
+            document.getElementById('contracts-search').addEventListener('input', () => fetchContracts());
+            document.getElementById('cashflow-search').addEventListener('input', () => fetchCashFlow());
             
             // Sorting
             document.getElementById('history-sort').addEventListener('change', () => fetchRentalHistory());
             document.getElementById('availability-sort').addEventListener('change', () => fetchAvailability());
             document.getElementById('customers-sort').addEventListener('change', () => fetchCustomers());
+            document.getElementById('contracts-sort').addEventListener('change', () => fetchContracts());
+            document.getElementById('cashflow-sort').addEventListener('change', () => fetchCashFlow());
+            document.getElementById('catalog-sort').addEventListener('change', triggerCatalogFetch);
 
             // Filters
             document.getElementById('apply-date-filter').addEventListener('click', triggerCatalogFetch);
@@ -636,13 +681,6 @@
                 fetchCustomers();
             }));
             
-            // New Rental Price Calculation
-            //document.getElementById('rental-start-date').addEventListener('change', calculateTotalPrice);
-            //document.getElementById('rental-return-date').addEventListener('change', calculateTotalPrice);
-            //document.getElementById('rental-discount').addEventListener('input', calculateTotalPrice);
-            //document.getElementById('new-return-date').addEventListener('change', calculateExtendedTotalPrice);
-            //document.getElementById('extend-discount').addEventListener('input', calculateExtendedTotalPrice);
-
             // Catalog View Switcher
             document.getElementById('grid-view-btn').addEventListener('click', () => switchCatalogView('grid'));
             document.getElementById('list-view-btn').addEventListener('click', () => switchCatalogView('list'));
@@ -775,55 +813,6 @@
                 toast.addEventListener('transitionend', () => toast.remove(), { once: true });
             }, 4000);
         }
-
-        /* function calculateTotalPrice() {
-           const form = document.getElementById('new-rental-form');
-           const startDateValue = form.rental_start_date.value;
-            const returnDateValue = form.expected_return_date.value;
-            const dailyPrice = parseFloat(form.rental_price.value);
-            const discount = parseFloat(form.discount.value) || 0;
-            const totalPriceEl = document.getElementById('rental-total-price');
-            
-            if (!startDateValue || !returnDateValue || !dailyPrice) {
-                totalPriceEl.textContent = formatCurrency(0);
-                return;
-            }
-            
-            const startDate = new Date(startDateValue + "T00:00:00");
-            const returnDate = new Date(returnDateValue + "T00:00:00");
-            
-            if (returnDate <= startDate) {
-                totalPriceEl.textContent = formatCurrency(0);
-                return;
-            }
-
-            const days = Math.ceil((returnDate - startDate) / (1000 * 60 * 60 * 24));
-            const subtotal = days * dailyPrice;
-            const total = subtotal - discount;
-
-           totalPriceEl.textContent = formatCurrency(Math.max(0, total));
-        } */
-
-        /*function calculateExtendedTotalPrice() {
-            const form = document.getElementById('extend-rental-form');
-            const newReturnDateValue = form.new_return_date.value;
-            const dailyPrice = parseFloat(form.daily_price.value);
-            const discount = parseFloat(form.discount.value) || 0;
-            const startDate = new Date(form.start_date.value);
-            const totalPriceEl = document.getElementById('extend-total-price');
-
-            if (!newReturnDateValue || !dailyPrice) {
-                totalPriceEl.textContent = formatCurrency(0);
-                return;
-            }
-
-            const newReturnDate = new Date(newReturnDateValue + "T00:00:00");
-            const days = Math.max(1, Math.ceil((newReturnDate - startDate) / (1000 * 60 * 60 * 24)));
-            const subtotal = days * dailyPrice;
-            const total = subtotal - discount;
-
-            totalPriceEl.textContent = formatCurrency(Math.max(0, total));
-        }*/
 
         function copyToClipboard() {
             const linkInput = document.getElementById('generated-link-input');
@@ -1480,6 +1469,9 @@
             const startDate = document.getElementById('filter-start-date').value;
             const endDate = document.getElementById('filter-end-date').value;
             const isDateFilterActive = startDate && endDate;
+            const sortValue = document.getElementById('catalog-sort').value.split('-');
+            const sortColumn = sortValue[0];
+            const sortAscending = sortValue[1] === 'asc';
 
             let query = supabaseClient.from('equipment').select('*, rentals(*, customers(name))');
 
@@ -1513,7 +1505,7 @@
                 query = query.ilike('name', `%${searchTerm}%`);
             }
             
-            query = query.order('name');
+            query = query.order(sortColumn, { ascending: sortAscending });
             const { data, error } = await query;
             if (error) return showToast('Erro ao buscar equipamentos.', 'error');
             
@@ -1567,7 +1559,13 @@
         }
 
         async function fetchContracts() {
-            const { data, error } = await supabaseClient
+            const searchTerm = document.getElementById('contracts-search').value;
+            const sortValue = document.getElementById('contracts-sort').value.split('-');
+            const isCustomerSort = sortValue[0].includes('customers.name');
+            const sortColumn = isCustomerSort ? 'name' : sortValue[0];
+            const sortAscending = sortValue[1] === 'asc';
+
+            let query = supabaseClient
                 .from('rentals')
                 .select(`
                     id,
@@ -1575,13 +1573,28 @@
                     expected_return_date,
                     total_price,
                     status,
-                    equipment(id, name, rental_price),
-                    customers(*)
+                    freight,
+                    equipment!inner(id, name, rental_price),
+                    customers!inner(id, name, nacionalidade, estado_civil, profissao, cpf, rg, endereco_completo)
                 `)
-                .or('status.eq.Ativa,status.eq.Agendado')
-                .order('expected_return_date', { ascending: true });
+                .or('status.eq.Ativa,status.eq.Agendado');
 
-            if (error) return showToast('Erro ao buscar contratos: ' + error.message, 'error');
+            if (searchTerm) {
+                query = query.or(`equipment.name.ilike.%${searchTerm}%,customers.name.ilike.%${searchTerm}%`);
+            }
+            
+            if (isCustomerSort) {
+                query = query.order(sortColumn, { foreignTable: 'customers', ascending: sortAscending });
+            } else {
+                query = query.order(sortColumn, { ascending: sortAscending });
+            }
+
+            const { data, error } = await query;
+
+            if (error) {
+                console.error("Erro ao buscar contratos:", error);
+                return showToast('Erro ao buscar contratos: ' + error.message, 'error');
+            }
 
             const tableBody = document.getElementById('contracts-table-body');
             if (data.length === 0) {
@@ -1589,38 +1602,52 @@
                 return;
             }
             
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
             tableBody.innerHTML = data.map(contract => {
+                let currentStatus = contract.status;
+                if (currentStatus === 'Ativa' && new Date(contract.expected_return_date) < today) {
+                    currentStatus = 'Atrasado';
+                }
+
                 const statusColors = {
                     'Ativa': 'bg-yellow-100 text-yellow-800',
-                    'Agendado': 'bg-blue-100 text-blue-800'
+                    'Agendado': 'bg-blue-100 text-blue-800',
+                    'Atrasado': 'bg-red-100 text-red-800'
                 };
-                const statusColor = statusColors[contract.status] || 'bg-gray-100 text-gray-800';
+                const statusColor = statusColors[currentStatus] || 'bg-gray-100 text-gray-800';
                 
+                let actionsHtml = `<button data-rental='${JSON.stringify(contract)}' class="edit-contract-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
+                                   <button class="generate-pdf-button bg-gray-500 text-white px-3 py-1 rounded text-sm ml-2" data-contract='${JSON.stringify(contract)}'>PDF</button>`;
+
+                if (contract.status === 'Ativa') { // Atrasado é um status derivado de Ativa, então as ações são as mesmas
+                    actionsHtml += `<button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2"
+                                        data-rental-id="${contract.id}"
+                                        data-equipment-id="${contract.equipment.id}"
+                                        data-equipment-name="${contract.equipment.name}"
+                                        data-start-date="${contract.rental_start_date}"
+                                        data-daily-price="${contract.equipment.rental_price}"
+                                        data-original-return-date="${contract.expected_return_date}">Estender</button>`;
+                } else if (contract.status === 'Agendado') {
+                    actionsHtml += `<button data-rental-id="${contract.id}" class="cancel-contract-button bg-red-500 text-white px-3 py-1 rounded text-sm ml-2">Cancelar</button>`;
+                }
+
                 return `
                 <tr class="border-b">
                     <td class="py-2 px-4">${contract.equipment.name}</td>
                     <td class="py-2 px-4">${contract.customers.name}</td>
                     <td class="py-2 px-4">${formatDate(contract.rental_start_date)}</td>
                     <td class="py-2 px-4">${formatDate(contract.expected_return_date)}</td>
-                    <td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${contract.status}</span></td>
+                    <td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${statusColor}">${currentStatus}</span></td>
                     <td class="py-2 px-4 text-right">${formatCurrency(contract.total_price)}</td>
-                    <td class="py-2 px-4 text-center">
-                         <button data-rental='${JSON.stringify(contract)}'
-                                 class="edit-contract-button text-yellow-500 hover:text-yellow-700 p-1">Editar</button>
-                        <button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2"
-                                data-rental-id="${contract.id}"
-                                data-equipment-id="${contract.equipment.id}"
-                                data-equipment-name="${contract.equipment.name}"
-                                data-start-date="${contract.rental_start_date}"
-                                data-daily-price="${contract.equipment.rental_price}"
-                                data-original-return-date="${contract.expected_return_date}">Estender</button>
-                        <button class="generate-pdf-button bg-gray-500 text-white px-3 py-1 rounded text-sm ml-2" data-contract='${JSON.stringify(contract)}'>PDF</button>
-                    </td>
+                    <td class="py-2 px-4 text-center">${actionsHtml}</td>
                 </tr>
             `}).join('');
             document.querySelectorAll('.edit-contract-button').forEach(btn => btn.addEventListener('click', handleEditContractClick));
             document.querySelectorAll('.extend-button').forEach(btn => btn.addEventListener('click', handleExtendClick));
             document.querySelectorAll('.generate-pdf-button').forEach(btn => btn.addEventListener('click', handleGeneratePDFClick));
+            document.querySelectorAll('.cancel-contract-button').forEach(btn => btn.addEventListener('click', handleCancelContractClick));
         }
 
         function handleGeneratePDFClick(e) {
@@ -1809,8 +1836,15 @@
             const startDate = document.getElementById('filter-cashflow-start').value;
             const endDate = document.getElementById('filter-cashflow-end').value;
             const typeFilter = document.querySelector('#cashflow-type-filters .active-filter').dataset.type;
+            const searchTerm = document.getElementById('cashflow-search').value;
+            const sortValue = document.getElementById('cashflow-sort').value.split('-');
+            const sortColumn = sortValue[0];
+            const sortAscending = sortValue[1] === 'asc';
 
-            let query = supabaseClient.from('cash_flow').select('*').order('transaction_date', { ascending: false });
+            let query = supabaseClient
+                .from('cash_flow')
+                .select('*')
+                .order(sortColumn, { ascending: sortAscending });
 
             if(startDate && endDate) {
                 if (new Date(startDate) > new Date(endDate)) {
@@ -1820,6 +1854,9 @@
             }
             if (typeFilter !== 'Todos') {
                 query = query.eq('type', typeFilter);
+            }
+            if (searchTerm) {
+                query = query.ilike('description', `%${searchTerm}%`);
             }
 
             const { data: transactions, error: transError } = await query;
@@ -1836,7 +1873,7 @@
                     } else {
                         periodExpenses += t.amount;
                     }
-                    const deleteButton = t.type === 'Saída' ? `<button data-id="${t.id}" class="delete-expense-button text-red-500 hover:text-red-700 p-1">Excluir</button>` : '';
+                    const deleteButton = `<button data-id="${t.id}" class="delete-transaction-button text-red-500 hover:text-red-700 p-1">Excluir</button>`;
 
                     return `<tr class="border-b"><td class="py-2 px-4">${formatDate(t.transaction_date)}</td><td class="py-2 px-4">${t.description}</td><td class="py-2 px-4"><span class="px-2 py-1 rounded-full text-xs ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td><td class="py-2 px-4 text-right font-medium ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatCurrency(t.amount)}</td><td class="py-2 px-4 text-center">${deleteButton}</td></tr>`;
                 }).join('');
@@ -1846,7 +1883,7 @@
             document.getElementById('total-expenses').textContent = formatCurrency(periodExpenses);
             document.getElementById('net-balance').textContent = formatCurrency(periodIncome - periodExpenses);
             
-            document.querySelectorAll('.delete-expense-button').forEach(b => b.addEventListener('click', handleDeleteExpenseClick));
+            document.querySelectorAll('.delete-transaction-button').forEach(b => b.addEventListener('click', handleDeleteTransactionClick));
 
 
             // Fetch overall balance
@@ -1876,25 +1913,25 @@
             }
         }
 
-        function handleDeleteExpenseClick(e) {
-            const expenseId = e.currentTarget.dataset.id;
+        function handleDeleteTransactionClick(e) {
+            const transactionId = e.currentTarget.dataset.id;
             const confirmBtn = document.getElementById('confirm-action-button');
             const cancelBtn = document.getElementById('cancel-confirmation-button');
             const modal = document.getElementById('confirmation-modal');
             
-            modal.querySelector('#confirmation-title').textContent = 'Excluir Despesa';
-            modal.querySelector('#confirmation-message').textContent = 'Tem a certeza que deseja excluir esta despesa? Esta ação não pode ser desfeita.';
+            modal.querySelector('#confirmation-title').textContent = 'Excluir Transação';
+            modal.querySelector('#confirmation-message').textContent = 'Tem a certeza que deseja excluir esta transação? Esta ação não pode ser desfeita.';
             
             openModal('confirmation-modal');
 
             const confirmHandler = async () => {
-                const { error } = await supabaseClient.from('cash_flow').delete().eq('id', expenseId);
+                const { error } = await supabaseClient.from('cash_flow').delete().eq('id', transactionId);
                 
                 closeModal('confirmation-modal');
                 if (error) {
-                    showToast('Falha ao excluir despesa: ' + error.message, 'error');
+                    showToast('Falha ao excluir transação: ' + error.message, 'error');
                 } else {
-                    showToast('Despesa excluída com sucesso!', 'success');
+                    showToast('Transação excluída com sucesso!', 'success');
                     fetchCashFlow();
                 }
                 confirmBtn.removeEventListener('click', confirmHandler);
@@ -1908,6 +1945,34 @@
             confirmBtn.addEventListener('click', confirmHandler, { once: true });
             cancelBtn.addEventListener('click', cancelHandler, { once: true });
         }
+
+        async function handleCancelContractClick(e) {
+            const rentalId = e.currentTarget.dataset.rentalId;
+            const confirmBtn = document.getElementById('confirm-action-button');
+
+            document.getElementById('confirmation-title').textContent = 'Cancelar Contrato Agendado';
+            document.getElementById('confirmation-message').textContent = 'Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.';
+
+            openModal('confirmation-modal');
+
+            const confirmHandler = async () => {
+                closeModal('confirmation-modal');
+                const { error } = await supabaseClient
+                    .from('rentals')
+                    .delete()
+                    .eq('id', rentalId);
+
+                if (error) {
+                    showToast('Falha ao cancelar o contrato: ' + error.message, 'error');
+                } else {
+                    showToast('Contrato cancelado com sucesso!', 'success');
+                    fetchContracts();
+                }
+            };
+
+            confirmBtn.addEventListener('click', confirmHandler, { once: true });
+        }
+
 
         function handleDeleteHistoryClick(e) {
             const rentalId = e.currentTarget.dataset.id;

@@ -633,7 +633,8 @@
         });
 
         // --- Lógica da UI ---
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async  () => {
+            await updateScheduledRentals(); // <<< CORREÇÃO APLICADA AQUI
             const navLinks = document.querySelectorAll('.nav-link');
             const pageSections = document.querySelectorAll('.page-section');
             const pageTitle = document.getElementById('page-title');
@@ -861,6 +862,55 @@
         }
 
         // --- Lógica Principal ---
+
+        async function updateScheduledRentals() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayISO = today.toISOString();
+
+            const { data: rentalsToUpdate, error: fetchError } = await supabaseClient
+                .from('rentals')
+                .select('id, equipment_id')
+                .eq('status', 'Agendado')
+                .lte('rental_start_date', todayISO);
+
+            if (fetchError) {
+                console.error('Erro ao buscar aluguéis agendados:', fetchError);
+                return;
+            }
+
+            if (rentalsToUpdate.length === 0) {
+                return; 
+            }
+
+            const rentalIds = rentalsToUpdate.map(r => r.id);
+            const equipmentIds = rentalsToUpdate.map(r => r.equipment_id);
+
+            const { error: updateRentalsError } = await supabaseClient
+                .from('rentals')
+                .update({ status: 'Ativa' })
+                .in('id', rentalIds);
+
+            if (updateRentalsError) {
+                console.error('Erro ao atualizar status de aluguéis:', updateRentalsError);
+                showToast('Falha ao iniciar agendamentos.', 'error');
+            }
+
+            const { error: updateEquipmentError } = await supabaseClient
+                .from('equipment')
+                .update({ status: 'Alugado' })
+                .in('id', equipmentIds);
+
+            if (updateEquipmentError) {
+                console.error('Erro ao atualizar status de equipamentos:', updateEquipmentError);
+                showToast('Falha ao atualizar status de equipamentos.', 'error');
+            }
+
+            if (!updateRentalsError && !updateEquipmentError) {
+                console.log(`${rentalsToUpdate.length} aluguel(éis) atualizado(s) de 'Agendado' para 'Ativo'.`);
+            }
+        }
+
         async function handleGenerateCustomerLink() {
             // 1. Create a placeholder customer record with a temporary name
             const { data, error } = await supabaseClient

@@ -391,7 +391,36 @@
     <div id="generated-link-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg"><h2 class="text-2xl font-bold mb-4">Link de Cadastro Gerado</h2><p class="mb-4 text-gray-600">Envie o link abaixo para o cliente. Ele será válido por 24 horas.</p><div class="flex items-center bg-gray-100 p-2 rounded-lg"><input type="text" id="generated-link-input" readonly class="w-full bg-transparent border-none text-gray-700 focus:ring-0"><button id="copy-link-button" class="ml-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Copiar</button></div><div class="text-right mt-6"><button type="button" class="cancel-modal-button px-6 py-2 bg-gray-300 rounded-lg">Fechar</button></div></div></div>
 
     <div id="confirmation-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-4" id="confirmation-title">Confirmar Ação</h2><p id="confirmation-message" class="mb-6">Tem a certeza que deseja prosseguir?</p><div class="flex justify-end space-x-4"><button type="button" id="cancel-confirmation-button" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="button" id="confirm-action-button" class="px-4 py-2 bg-red-600 text-white rounded-lg">Confirmar</button></div></div></div>
-    <div id="extend-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Estender Contrato</h2><form id="extend-rental-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><input type="hidden" name="original_return_date"><input type="hidden" name="daily_price"><input type="hidden" name="start_date"><div><label class="block text-gray-700">Equipamento</label><p id="extend-equipment-name" class="text-lg font-semibold"></p></div><div><label for="new-return-date" class="block text-gray-700">Nova Data de Devolução</label><input type="date" id="new-return-date" name="new_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Desconto Adicional (R$)</label><input type="number" id="extend-discount" name="discount" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00"></div><div class="mt-4 pt-4 border-t"><p class="text-lg font-semibold text-gray-800">Valor Total Atualizado: <span id="extend-total-price" class="text-blue-600">R$ 0,00</span></p></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar Extensão</button></div></form></div></div>
+    
+    <!-- MODAL DE ESTENDER CONTRATO - MODIFICADO -->
+    <div id="extend-rental-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Estender Contrato</h2>
+            <form id="extend-rental-form" class="space-y-4">
+                <input type="hidden" name="rental_id">
+                <input type="hidden" name="equipment_id">
+                
+                <div>
+                    <label class="block text-gray-700">Equipamento</label>
+                    <p id="extend-equipment-name" class="text-lg font-semibold"></p>
+                </div>
+                <div>
+                    <label for="new-return-date" class="block text-gray-700">Nova Data de Devolução</label>
+                    <input type="date" id="new-return-date" name="new_return_date" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label for="extend-total-price-input" class="block text-gray-700">Valor Total Atualizado do Contrato (R$)</label>
+                    <input type="number" id="extend-total-price-input" name="total_price" class="w-full px-3 py-2 border rounded-lg" step="0.01" placeholder="0.00" required>
+                </div>
+                
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Confirmar Extensão</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <div id="equipment-details-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col"><div class="flex justify-between items-start mb-4"><h2 class="text-2xl font-bold equipment-name"></h2><button type="button" class="cancel-modal-button text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button></div><div class="flex-grow overflow-y-auto"><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><img src="https://placehold.co/600x400" alt="Equipment Image" class="equipment-image w-full h-64 object-cover rounded-lg mb-4"><div><h3 class="font-semibold text-lg border-b pb-2 mb-2">Preço</h3><p class="text-2xl font-bold text-blue-600 equipment-price"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2 mt-4">Data de Aquisição</h3><p class="text-gray-700 equipment-acquisition-date"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2 mt-4">Descrição</h3><p class="text-gray-700 equipment-description mb-4"></p><h3 class="font-semibold text-lg border-b pb-2 mb-2">Informações Adicionais</h3><p class="text-gray-700 equipment-additional-info"></p></div></div><div class="mt-6"><h3 class="font-semibold text-lg border-b pb-2 mb-2">Histórico de Locações</h3><div class="overflow-x-auto max-h-48"><table class="min-w-full bg-white"><thead class="bg-gray-200 sticky top-0"><tr><th class="py-2 px-4 text-left">Cliente</th><th class="py-2 px-4 text-left">Início</th><th class="py-2 px-4 text-left">Fim</th><th class="py-2 px-4 text-left">Status</th></tr></thead><tbody id="equipment-rental-history-table"></tbody></table></div></div></div><div class="flex justify-end space-x-4 pt-6 mt-auto border-t"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Fechar</button><button type="button" class="edit-button-modal bg-yellow-400 text-yellow-900 hover:bg-yellow-500 font-semibold py-2 px-4 rounded-lg">Editar Equipamento</button></div></div></div>
     <div id="add-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Equipamento</h2><form id="add-equipment-form" class="space-y-4"><div><label class="block text-gray-700">Nome</label><input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salvar</button></div></form></div></div>
     <div id="edit-equipment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Editar Equipamento</h2><form id="edit-equipment-form" class="space-y-4"><input type="hidden" name="id"><div><label class="block text-gray-700">Nome</label><input type="text" id="edit-name" name="name" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Descrição</label><textarea id="edit-description" name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">Informações Adicionais</label><textarea id="edit-additional-info" name="additional_info" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div><label class="block text-gray-700">URL da Imagem</label><input type="text" id="edit-image_url" name="image_url" class="w-full px-3 py-2 border rounded-lg"></div><div><label class="block text-gray-700">Status</label><select id="edit-status" name="status" class="w-full px-3 py-2 border rounded-lg" required><option value="Disponível">Disponível</option><option value="Alugado">Alugado</option><option value="Em Reparo">Em Reparo</option></select></div><div><label class="block text-gray-700">Data de Aquisição</label><input type="date" id="edit-acquisition_date" name="acquisition_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">Salvar Alterações</button></div></form></div></div>
@@ -506,7 +535,6 @@
             <form id="edit-contract-form" class="space-y-4">
                 <input type="hidden" name="rental_id">
                 <input type="hidden" name="original_equipment_id">
-                <input type="hidden" name="start_date">
                 
                 <div>
                     <label for="edit-contract-equipment" class="block text-gray-700">Equipamento</label>
@@ -517,6 +545,11 @@
                 <div>
                     <label class="block text-gray-700">Cliente</label>
                     <select name="customer_id" id="edit-contract-customer" class="w-full px-3 py-2 border rounded-lg" required></select>
+                </div>
+                <!-- CAMPO DE DATA DE INÍCIO - MODIFICADO -->
+                <div id="edit-start-date-wrapper" style="display: none;">
+                    <label for="edit-contract-start-date" class="block text-gray-700">Início da Locação</label>
+                    <input type="date" id="edit-contract-start-date" name="rental_start_date" class="w-full px-3 py-2 border rounded-lg">
                 </div>
                 <div>
                     <label class="block text-gray-700">Devolução Prevista</label>
@@ -537,9 +570,10 @@
             </form>
         </div>
     </div>
-            <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
-    <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
-     <div id="approve-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+
+    <div id="add-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Adicionar Despesa</h2><form id="add-expense-form" class="space-y-4"><div><label class="block text-gray-700">Descrição</label><input type="text" name="description" class="w-full px-3 py-2 border rounded-lg" required></div><div><label class="block text-gray-700">Valor (R$)</label><input type="number" name="amount" class="w-full px-3 py-2 border rounded-lg" step="0.01" required></div><div><label class="block text-gray-700">Data da Transação</label><input type="date" name="transaction_date" class="w-full px-3 py-2 border rounded-lg" required></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Salvar Despesa</button></div></form></div></div>
+    <div id="return-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"><div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"><h2 class="text-2xl font-bold mb-6">Registrar Devolução</h2><form id="return-form" class="space-y-4"><input type="hidden" name="rental_id"><input type="hidden" name="equipment_id"><input type="hidden" name="equipment_name"><div><label class="block text-gray-700">Equipamento</label><p id="return-equipment-name" class="text-lg font-semibold"></p></div><div><label for="actual_return_date" class="block text-gray-700">Data de Devolução</label><input type="date" id="actual_return_date" name="actual_return_date" class="w-full px-3 py-2 border rounded-lg" required></div><div><label for="return-additional-info" class="block text-gray-700">Informações Adicionais (Condição, etc.)</label><textarea id="return-additional-info" name="additional_info" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea></div><div class="flex justify-end space-x-4 pt-4"><button type="button" class="cancel-modal-button px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button><button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirmar Devolução</button></div></form></div></div>
+    <div id="approve-customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg">
             <h2 class="text-2xl font-bold mb-4">Aprovar Cliente Pendente</h2>
             <div id="approve-customer-details" class="space-y-2 mb-6 text-gray-700"></div>
@@ -633,7 +667,9 @@
         });
 
         // --- Lógica da UI ---
+        
         document.addEventListener('DOMContentLoaded', async  () => {
+            await checkOverdueRentals();
             await updateScheduledRentals(); // <<< CORREÇÃO APLICADA AQUI
             const navLinks = document.querySelectorAll('.nav-link');
             const pageSections = document.querySelectorAll('.page-section');
@@ -835,7 +871,7 @@
             return new Date(date.getTime() + userTimezoneOffset).toLocaleDateString('pt-BR');
         }
         
-        function showToast(message, type = 'info') {
+        function showToast(message, type = 'info', duration = 4000) {
             const toastContainer = document.getElementById('toast-container');
             const toast = document.createElement('div');
             const typeClasses = { success: 'bg-green-500 text-white', error: 'bg-red-500 text-white', info: 'bg-blue-500 text-white' };
@@ -851,7 +887,7 @@
             setTimeout(() => {
                 toast.classList.remove('show');
                 toast.addEventListener('transitionend', () => toast.remove(), { once: true });
-            }, 4000);
+            }, duration); // Usa o parâmetro duration
         }
 
         function copyToClipboard() {
@@ -910,6 +946,41 @@
                 console.log(`${rentalsToUpdate.length} aluguel(éis) atualizado(s) de 'Agendado' para 'Ativo'.`);
             }
         }
+
+        //NOTIFICAÇÃO DE ATRASADOS
+        // Nova função para verificar contratos atrasados e notificar
+        async function checkOverdueRentals() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayISO = today.toISOString();
+
+            const { data: overdueRentals, error } = await supabaseClient
+                .from('rentals')
+                .select('id, equipment(name), customers(name)')
+                .eq('status', 'Ativa')
+                .lt('expected_return_date', todayISO);
+
+            if (error) {
+                console.error('Erro ao verificar contratos atrasados:', error);
+                return;
+            }
+
+            if (overdueRentals.length > 0) {
+                let message = `Você tem ${overdueRentals.length} contrato(s) atrasado(s) interferindo em outros contratos!`;
+                overdueRentals.forEach(rental => {
+                    message += `\n- Equipamento: ${rental.equipment?.name || 'N/A'}, Cliente: ${rental.customers?.name || 'N/A'}`;
+                });
+                showToast(message, 'error',30000); // Duração de 30 segundos (30000ms)
+                // Atualiza o status para "Atrasado" no banco de dados
+                const rentalIdsToUpdate = overdueRentals.map(r => r.id);
+                await supabaseClient
+                    .from('rentals')
+                    .update({ status: 'Atrasado' })
+                    .in('id', rentalIdsToUpdate);
+                fetchContracts(); // Recarrega a lista de contratos para exibir o status atualizado
+            }
+        }
+
 
         async function handleGenerateCustomerLink() {
             // 1. Create a placeholder customer record with a temporary name
@@ -1206,6 +1277,11 @@
                 total_price: parseFloat(formData.get('total_price')),
                 freight: parseFloat(formData.get('freight')) || 0
             };
+            
+            // Adiciona a data de início na atualização apenas se ela estiver presente no formulário
+            if (formData.get('rental_start_date')) {
+                updateData.rental_start_date = formData.get('rental_start_date');
+            }
 
             if (isNaN(updateData.total_price) || isNaN(updateData.freight)) {
                 return showToast('Os valores de contrato e frete devem ser números válidos.', 'error');
@@ -1221,7 +1297,6 @@
                 };
                 const { error: logError } = await supabaseClient.from('equipment_change_log').insert(logData);
                 if (logError) {
-                    // We can either stop the process or just warn the user
                     console.error('Failed to log equipment change:', logError);
                     showToast('Aviso: Falha ao registrar a troca do equipamento no histórico.', 'error');
                 } else {
@@ -1242,7 +1317,6 @@
             e.target.reset();
             closeModal('edit-contract-modal');
             
-            // Recarrega os dados relevantes na tela
             fetchAvailability();
             fetchCustomers();
             fetchContracts();
@@ -1255,10 +1329,17 @@
             const rentalId = parseInt(form.rental_id.value);
             const equipmentId = parseInt(form.equipment_id.value);
             const newReturnDate = form.new_return_date.value;
-            const originalReturnDate = form.original_return_date.value;
-            const totalPrice = parseFloat(formData.get('total_price'));
+            const newTotalPrice = parseFloat(form.total_price.value);
 
-            if (new Date(newReturnDate) <= new Date(originalReturnDate)) {
+            if (isNaN(newTotalPrice)) {
+                return showToast('Por favor, insira um valor total válido.', 'error');
+            }
+
+            // A data de retorno original é necessária para a verificação de conflitos
+            const { data: originalRental, error: fetchError } = await supabaseClient.from('rentals').select('expected_return_date').eq('id', rentalId).single();
+            if (fetchError) return showToast('Erro ao buscar dados originais do contrato.', 'error');
+
+            if (new Date(newReturnDate) <= new Date(originalRental.expected_return_date)) {
                 return showToast('A nova data deve ser posterior à data de devolução original.', 'error');
             }
 
@@ -1268,7 +1349,7 @@
                 .eq('equipment_id', equipmentId)
                 .neq('id', rentalId)
                 .lt('rental_start_date', newReturnDate)
-                .gt('rental_start_date', originalReturnDate);
+                .gt('rental_start_date', originalRental.expected_return_date);
 
             if(conflictError) return showToast('Erro ao verificar disponibilidade: ' + conflictError.message, 'error');
 
@@ -1276,14 +1357,13 @@
                 return showToast('Conflito de agendamento. O equipamento já está reservado para este período.', 'error');
             }
             
-            const dailyPrice = parseFloat(form.daily_price.value);
-            const discount = parseFloat(form.discount.value) || 0;
-            const startDate = new Date(form.start_date.value);
-            const newEndDate = new Date(newReturnDate);
-            const newDuration = Math.max(1, Math.ceil((newEndDate - startDate) / (1000 * 60 * 60 * 24)));
-            const newTotalPrice = (newDuration * dailyPrice) - discount;
-
-            const { error: updateError } = await supabaseClient.from('rentals').update({ expected_return_date: newReturnDate, total_price: newTotalPrice }).eq('id', rentalId);
+            const { error: updateError } = await supabaseClient
+                .from('rentals')
+                .update({ 
+                    expected_return_date: newReturnDate, 
+                    total_price: newTotalPrice 
+                })
+                .eq('id', rentalId);
             
             if(updateError) return showToast('Erro ao estender o contrato: ' + updateError.message, 'error');
 
@@ -1667,6 +1747,7 @@
                     total_price,
                     status,
                     freight,
+                    deposit,
                     equipment!inner(id, name, rental_price),
                     customers!inner(id, name, nacionalidade, estado_civil, profissao, cpf, rg, endereco_completo)
                 `)
@@ -1730,14 +1811,15 @@
                                    <button class="generate-pdf-button bg-gray-500 text-white px-3 py-1 rounded text-sm ml-2" data-contract='${JSON.stringify(contract)}'>PDF</button>`;
 
                 if (currentStatus === 'Ativa' || currentStatus === 'Atrasado') {
-                    actionsHtml += `<button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2"
-                                        data-rental-id="${contract.id}"
-                                        data-equipment-id="${contract.equipment.id}"
-                                        data-equipment-name="${contract.equipment.name}"
-                                        data-start-date="${contract.rental_start_date}"
-                                        data-daily-price="${contract.equipment.rental_price}"
-                                        data-original-return-date="${contract.expected_return_date}">Estender</button>`;
-                } else if (currentStatus === 'Agendado') {
+                    // BOTÃO DE ESTENDER - MODIFICADO
+                    actionsHtml += `<button class="extend-button bg-blue-500 text-white px-3 py-1 rounded text-sm ml-2" data-contract='${JSON.stringify(contract)}'>Estender</button>`;
+                }
+
+                if (currentStatus === 'Atrasado') {
+                    actionsHtml += `<button data-rental-id="${contract.id}" data-equipment-id="${contract.equipment.id}" data-equipment-name="${contract.equipment.name}" class="return-button bg-green-500 text-white px-3 py-1 rounded text-sm ml-2">Devolver</button>`;
+                }
+
+                if (currentStatus === 'Agendado') {
                     actionsHtml += `<button data-rental-id="${contract.id}" class="cancel-contract-button bg-red-500 text-white px-3 py-1 rounded text-sm ml-2">Cancelar</button>`;
                 }
 
@@ -1757,6 +1839,7 @@
             document.querySelectorAll('.extend-button').forEach(btn => btn.addEventListener('click', handleExtendClick));
             document.querySelectorAll('.generate-pdf-button').forEach(btn => btn.addEventListener('click', handleGeneratePDFClick));
             document.querySelectorAll('.cancel-contract-button').forEach(btn => btn.addEventListener('click', handleCancelContractClick));
+            document.querySelectorAll('.return-button').forEach(b => b.addEventListener('click', handleReturnClick)); // Adiciona listener para o novo botão Devolver
         }
 
         function handleGeneratePDFClick(e) {
@@ -1796,7 +1879,7 @@
 
             form.elements['valor_total'].value = contract.total_price || 0.00;
             form.elements['valor_frete'].value = contract.freight || 0.00;
-            form.elements['valor_sinal'].value = '';
+            form.elements['valor_sinal'].value = contract.deposit || '';
             form.elements['valor_diaria_extra'].value = '80.00';
         }
 
@@ -1837,7 +1920,7 @@
             doc.setFont("helvetica", "bold");
             doc.text("CLÁUSULA 1 - OBJETO E PRAZO DE LOCAÇÃO", 15, y); y += 6;
             doc.setFont("helvetica", "normal");
-            const clause1Text = `O presente contrato tem por objeto a locação de ${data.objeto_descricao}, pelo prazo de ${data.prazo_dias} dias, contados a partir de ${formatDate(data.data_inicio)} conforme acordado entre as partes.`;
+            const clause1Text = `O presente contrato tem por objeto a locação de ${data.objeto_descricao}, pelo prazo de ${data.prazo_dias} dias, contados a partir de ${formatDate(data.data_inicio)} até ${formatDate(data.data_fim)} conforme acordado entre as partes.`;
             splitText = doc.splitTextToSize(clause1Text, 180);
             doc.text(splitText, 15, y);
             y += (splitText.length * 5) + 5;
@@ -2249,38 +2332,46 @@
 
         async function handleEditContractClick(e) {
             const contractData = JSON.parse(e.currentTarget.dataset.rental);
-            const { id: rentalId, rental_start_date, expected_return_date, equipment, customers: customer } = contractData;
+            const { id: rentalId, rental_start_date, expected_return_date, equipment, customers: customer, status } = contractData;
 
             const form = document.getElementById('edit-contract-form');
-            form.reset(); // Clear previous data
+            form.reset(); 
 
             form.rental_id.value = rentalId;
             form.original_equipment_id.value = equipment.id;
-            form.start_date.value = rental_start_date;
-
-            // Preencher campos de valor e data
+            
             form.total_price.value = contractData.total_price || 0;
             form.freight.value = contractData.freight || 0;
+            
             const returnDate = new Date(expected_return_date);
             returnDate.setMinutes(returnDate.getMinutes() + returnDate.getTimezoneOffset());
             form.expected_return_date.value = returnDate.toISOString().split('T')[0];
 
-            // Popular select de clientes
+            // MOSTRAR/ESCONDER E PREENCHER CAMPO DE DATA DE INÍCIO - MODIFICADO
+            const startDateWrapper = document.getElementById('edit-start-date-wrapper');
+            if (status === 'Agendado') {
+                const startDate = new Date(rental_start_date);
+                startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
+                form.rental_start_date.value = startDate.toISOString().split('T')[0];
+                startDateWrapper.style.display = 'block';
+            } else {
+                startDateWrapper.style.display = 'none';
+                form.rental_start_date.value = ''; // Limpa o valor para não ser enviado
+            }
+
             const customerSelect = document.getElementById('edit-contract-customer');
             const { data: customers, error: customerError } = await supabaseClient.from('customers').select('id, name').order('name');
             if (customerError) return showToast("Erro ao buscar clientes.", 'error');
             customerSelect.innerHTML = customers.map(c => `<option value="${c.id}" ${c.id == customer.id ? 'selected' : ''}>${c.name}</option>`).join('');
 
-            // Popular select de equipamentos
             const equipmentSelect = document.getElementById('edit-contract-equipment');
             equipmentSelect.innerHTML = `<option value="">Carregando equipamentos...</option>`;
 
-            // Buscar equipamentos disponíveis para o período do contrato
             const { data: unavailableRentals, error: rentalError } = await supabaseClient
                 .from('rentals')
                 .select('equipment_id')
                 .or(`status.eq.Ativa,status.eq.Agendado`)
-                .neq('id', rentalId) // Excluir o próprio contrato da verificação
+                .neq('id', rentalId) 
                 .lte('rental_start_date', expected_return_date)
                 .gte('expected_return_date', rental_start_date);
 
@@ -2298,7 +2389,6 @@
 
             if (equipmentError) return showToast('Erro ao buscar equipamentos disponíveis.', 'error');
 
-            // Adicionar o equipamento atual à lista, caso não esteja nela
             const isCurrentEquipmentInList = availableEquipment.some(eq => eq.id === equipment.id);
             if (!isCurrentEquipmentInList) {
                 availableEquipment.push({ id: equipment.id, name: equipment.name });
@@ -2313,23 +2403,27 @@
         }
 
         async function handleExtendClick(e) {
-            const { rentalId, equipmentId, equipmentName, originalReturnDate, dailyPrice, startDate } = e.currentTarget.dataset;
+            const contractData = JSON.parse(e.currentTarget.dataset.contract);
+            const { id: rentalId, equipment, total_price, expected_return_date } = contractData;
             
             const form = document.getElementById('extend-rental-form');
+            form.reset();
+            
             form.rental_id.value = rentalId;
-            form.equipment_id.value = equipmentId;
-            form.original_return_date.value = originalReturnDate;
-            form.daily_price.value = dailyPrice;
-            form.start_date.value = startDate;
-            document.getElementById('extend-equipment-name').textContent = equipmentName;
+            form.equipment_id.value = equipment.id;
+            document.getElementById('extend-equipment-name').textContent = equipment.name;
             
-            const date = new Date(originalReturnDate);
-            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-            const correctedDate = new Date(date.getTime() + userTimezoneOffset);
-            form.new_return_date.value = correctedDate.toISOString().split('T')[0];
-            form.new_return_date.min = correctedDate.toISOString().split('T')[0];
+            // PREENCHER CAMPO DE VALOR TOTAL - MODIFICADO
+            form.elements['total_price'].value = total_price;
+
+            const date = new Date(expected_return_date);
+            date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+            const nextDay = new Date(date);
+            nextDay.setDate(date.getDate() + 1);
+
+            form.new_return_date.value = nextDay.toISOString().split('T')[0];
+            form.new_return_date.min = nextDay.toISOString().split('T')[0];
             
-            //calculateExtendedTotalPrice();
             openModal('extend-rental-modal');
         }
 
@@ -2399,6 +2493,7 @@
             const form = document.getElementById('return-form');
             form.rental_id.value = rentalId;
             form.equipment_id.value = equipmentId;
+            form.equipment_name.value = equipment.name;
             document.getElementById('return-equipment-name').textContent = equipment.name;
             form.elements.additional_info.value = equipment.additional_info || '';
             form.actual_return_date.valueAsDate = new Date();

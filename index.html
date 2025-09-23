@@ -318,6 +318,16 @@
                         <p id="total-balance" class="text-2xl font-bold text-green-600">R$ 0,00</p>
                     </div>
                 </div>
+                <!-- Explicação breve dos indicadores financeiros -->
+                <div class="bg-white p-4 rounded-lg shadow-sm mb-6 text-sm text-gray-700">
+                    <h5 class="font-semibold mb-2">O que significam estes valores</h5>
+                    <ul class="list-inside list-disc space-y-1">
+                        <li><strong>Receita Prevista (Mês Atual):</strong> soma dos valores de contratos ativos cujo retorno está previsto para este mês. Representa o valor esperado de receita para o mês corrente.</li>
+                        <li><strong>Renda Prevista (Contratos Agendados):</strong> valor total de contratos com status <em>Agendado</em> que ainda não começaram; refere-se a contratos futuros agendados para início a partir de hoje.</li>
+                        <li><strong>Balanço Geral (Realizado):</strong> saldo acumulado considerando todas as transações registradas no fluxo de caixa (Entradas são somadas, Saídas são subtraídas).</li>
+                        <li><strong>Total de Entradas (Período):</strong> soma das transações do tipo <em>Entrada</em> no período filtrado (usado para análise do período selecionado nos filtros acima).</li>
+                    </ul>
+                </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Histórico de Transações</h3>
@@ -2052,9 +2062,9 @@
                 document.getElementById('cash-flow-table-body').innerHTML = transactions.map(t => {
                     const isIncome = t.type === 'Entrada';
                     if(isIncome) {
-                        periodIncome += t.amount;
+                        periodIncome += Number(t.amount) || 0;
                     } else {
-                        periodExpenses += t.amount;
+                        periodExpenses += Number(t.amount) || 0;
                     }
                     const deleteButton = `<button data-id="${t.id}" class="delete-transaction-button text-red-500 hover:text-red-700 p-1">Excluir</button>`;
 
@@ -2072,26 +2082,28 @@
             // Fetch overall balance
             const { data: allTransactions } = await supabaseClient.from('cash_flow').select('amount, type');
             if(allTransactions) {
-                const totalBalance = allTransactions.reduce((acc, t) => acc + (t.type === 'Entrada' ? t.amount : -t.amount), 0);
+                const totalBalance = allTransactions.reduce((acc, t) => acc + (t.type === 'Entrada' ? (Number(t.amount) || 0) : -(Number(t.amount) || 0)), 0);
                 document.getElementById('total-balance').textContent = formatCurrency(totalBalance);
             }
 
             // Fetch forecast income (current month)
             const today = new Date();
-            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString();
-            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString();
+            // start of month (00:00:00.000) and end of month (23:59:59.999) to include full day ranges
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0).toISOString();
+            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
             const { data: forecast, error: forecastError } = await supabaseClient.from('rentals').select('total_price').eq('status', 'Ativa').gte('expected_return_date', firstDay).lte('expected_return_date', lastDay);
             if(forecastError) return showToast('Erro ao buscar previsão de receita.', 'error');
             if(forecast) {
-                const forecastSum = forecast.reduce((sum, r) => sum + r.total_price, 0);
+                const forecastSum = forecast.reduce((sum, r) => sum + (Number(r.total_price) || 0), 0);
                 document.getElementById('forecast-income').textContent = formatCurrency(forecastSum);
             }
             
-            // Fetch future income
-            const { data: futureRentals, error: futureError } = await supabaseClient.from('rentals').select('total_price').gt('rental_start_date', today.toISOString());
+            // Fetch future income — consider only contracts explicitly 'Agendado' (scheduled)
+            const todayISO = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0,0).toISOString();
+            const { data: futureRentals, error: futureError } = await supabaseClient.from('rentals').select('total_price').eq('status', 'Agendado').gte('rental_start_date', todayISO);
             if(futureError) return showToast('Erro ao buscar renda futura.', 'error');
             if(futureRentals) {
-                 const futureSum = futureRentals.reduce((sum, r) => sum + r.total_price, 0);
+                 const futureSum = futureRentals.reduce((sum, r) => sum + (Number(r.total_price) || 0), 0);
                 document.getElementById('future-income').textContent = formatCurrency(futureSum);
             }
         }
